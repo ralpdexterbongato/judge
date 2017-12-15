@@ -102,3 +102,28 @@ nav
   width: 100%;
   margin-top: 40px;
 }
+
+*{
+  box-sizing: border-box;
+}
+
+/*index*/
+.card-content
+{
+  height:180px;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+/*setup*/
+.setup-form
+{
+  width: 540px;
+  margin:auto;
+  padding:20px;
+}
+.Contest-Setup-Container
+{
+  display: flex;
+  min-height: 100vh;
+}

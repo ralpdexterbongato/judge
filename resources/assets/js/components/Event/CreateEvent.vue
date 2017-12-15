@@ -3,17 +3,12 @@
     <div class="create-event-form">
       <div class="input-field col s6">
         <i class="material-icons prefix">title</i>
-        <input id="EventName" type="text" class="validate">
+        <input id="EventName" v-model="titleEvent" type="text" class="validate">
         <label for="EventName">Event Title</label>
-      </div>
-      <div class="input-field col s6">
-        <i class="material-icons prefix">people</i>
-        <input id="contestant_no" type="number" class="validate">
-        <label for="contestant_no">Number of contestants</label>
       </div>
       <div class="criterias">
         <p v-for="criteria in allCriteria">
-          <input type="checkbox" :id="'criteria'+criteria.id" />
+          <input v-model="checkedCriteria" :value="criteria.id" type="checkbox" :id="'criteria'+criteria.id" />
           <label :for="'criteria'+criteria.id">{{criteria.name}}</label>
         </p>
       </div>
@@ -25,7 +20,7 @@
           Add
         </button>
       </div>
-      <button class="btn waves-effect waves-light save-event-btn" type="submit" name="action">
+      <button class="btn waves-effect waves-light save-event-btn" v-on:click="submitAll()" type="submit" name="action">
        Save
       </button>
     </div>
@@ -39,6 +34,8 @@
       return {
         CriteriaNew:'',
         allCriteria:[],
+        checkedCriteria:[],
+        titleEvent:''
       }
     },
     methods: {
@@ -58,7 +55,7 @@
                 'Criteria added!',
                 'success'
               );
-              vm.CriteriaNew=''
+              vm.CriteriaNew='';
           }else
           {
             vm.$swal(
@@ -80,6 +77,29 @@
           console.log(response);
           vm.allCriteria=response.data;
         })
+      },
+      submitAll()
+      {
+        var vm=this;
+        axios.post(`/events-save`,{
+
+          Title:this.titleEvent,
+          Criterias:this.checkedCriteria
+
+        }).then(function(response)
+        {
+          vm.titleEvent='';
+          vm.checkedCriteria=[];
+          console.log(response);
+          vm.$swal(
+            'New',
+            'event created!',
+            'success'
+          );
+        },function(error)
+        {
+          console.log(response);
+        });
       }
     },
     created () {

@@ -26,6 +26,6 @@ class RegisterController extends Controller
       $userTbl->password = bcrypt($request->password);
       $userTbl->role = $request->role;
       $userTbl->save();
-      return redirect('/');
+      return redirect()->back();
     }
 }

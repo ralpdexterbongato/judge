@@ -29,10 +29,10 @@
       </ul>
       <nav class="blue">
         <div class="nav-wrapper">
-          <a href="#!" class="brand-logo"><i class="material-icons">J-APP</i></a>
+          <a href="#!" class="brand-logo">J-APP</a>
           <ul class="right hide-on-med-and-down">
             <li><a href="/events-panel">Events</a></li>
-            <li><a href="badges.html">Judges</a></li>
+            <li><a href="#">Activities</a></li>
             <!-- Dropdown Trigger -->
             <li>
               <a class="dropdown-button" href="#!" data-activates="dropdown1">
@@ -79,14 +79,15 @@
        </footer>
     <script type="text/javascript" src="/js/jquery.js">
     </script>
-    <script type="text/javascript" src="/js/app.js">
-    </script>
-    <script type="text/javascript" src="/js/materialize.min.js">
-    </script>
     <script type="text/javascript">
       $(document).ready(function() {
         $(".button-collapse").sideNav();
+        $('select').material_select();
       });
+    </script>
+    <script type="text/javascript" src="/js/app.js">
+    </script>
+    <script type="text/javascript" src="/js/materialize.min.js">
     </script>
   </body>
 </html>

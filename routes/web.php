@@ -22,6 +22,10 @@ Route::post('/logout','Auth\LoginController@Logout')->name('logout');
 
 Route::get('/events-panel','EventController@index');
 Route::get('/events-create','EventController@create')->name('create.event');
+Route::post('/events-save','EventController@store');
 
 Route::post('/criteria-store','Criteria\CriteriaController@store')->name('criteria.adding');
 Route::get('/criteria-index','Criteria\CriteriaController@index');
+
+Route::get('/setup-create/{eventId}','SetupController@create');
+Route::post('/setup-store','SetupController@store');
