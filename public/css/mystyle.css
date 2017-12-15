@@ -1,0 +1,104 @@
+nav
+{
+  padding:0px 50px;
+}
+.material-icons
+{
+  vertical-align: middle!important;
+}
+.login-form-container
+{
+  display: flex;
+  min-height:100vh;
+}
+.login-form
+{
+  margin:auto;
+  padding:20px 30px;
+  width: 500px;
+}
+@media (max-width:560px)
+{
+  .login-form
+  {
+    margin: 10px;
+  }
+}
+.content-container
+{
+  min-height: 100vh;
+}
+
+
+/*register*/
+.Create-Acc-container
+{
+  display: flex;
+  min-height: 100vh;
+  padding:40px 20px;
+}
+.create-acc-form
+{
+  width: 500px;
+  margin:auto;
+}
+.form-error
+{
+  text-align: center;
+}
+
+/*previous events*/
+.previous-events-container
+{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content:space-between;
+  padding-top: 20px;
+  padding-bottom:20px;
+}
+@media (max-width:950px)
+{
+  .previous-events-container
+  {
+    justify-content: space-around;
+  }
+}
+.previous-events-container .card
+{
+  margin:20px;
+  width:400px!important;
+}
+.bottom-btn-more
+{
+  display: flex;
+  justify-content: space-between;
+}
+
+/*create event*/
+.create-event-container
+{
+  display: flex;
+  min-height: 100vh;
+}
+.create-event-form
+{
+  margin:auto;
+  width: 500px;
+  padding:20px;
+}
+.criterias
+{
+  display: flex;
+  justify-content:flex-start;
+  flex-wrap: wrap;
+  padding:20px;
+}
+.criterias p
+{
+  margin:10px;
+}
+.save-event-btn
+{
+  width: 100%;
+  margin-top: 40px;
+}
