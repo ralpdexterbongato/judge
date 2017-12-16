@@ -18,6 +18,7 @@ class CreateSetupsTable extends Migration
             $table->integer('event_id');
             $table->string('Name');
             $table->integer('NumberContestant');
+            $table->integer('isActive')->nullable();
             $table->timestamps();
         });
     }

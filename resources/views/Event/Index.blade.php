@@ -7,7 +7,7 @@ Admin
   <div class="card z-depth-2">
     <div class="card-content white blue-text">
         <h4 class="card-stats-number">NEW</h4>
-        <p class="card-stats-compare"><i class="mdi-hardware-keyboard-arrow-up"></i>
+        <p class="card-stats-compare"><i class="mdi-hardware-keyboard-arrow-up"></i> Customize here
         </p>
     </div>
     <div class="card-action light-grey darken-2 bottom-btn-more">

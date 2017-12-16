@@ -20,6 +20,11 @@ class SetupController extends Controller
   }
   public function store(Request $request)
   {
+    $this->validate($request,[
+      'eventid'=>'required',
+      'NameActivity'=>'required|max:30',
+      'ContestantNo'=>'required'
+    ]);
     $setup= new Setup;
     $setup->event_id=$request->eventid;
     $setup->Name=$request->NameActivity;
@@ -32,6 +37,17 @@ class SetupController extends Controller
       $forjoin[] = array('user_id' =>$judge,'setup_id'=>$setup->id);
     }
     JudgesSetup::insert($forjoin);
-    return redirect()->back();
+    return redirect()->back()->with('success', 'success');
+  }
+  public function index()
+  {
+    $ActivityAndJudges=Setup::with('Judges','Event')->orderBy('id','DESC')->paginate(10);
+    return view('Setup.index',compact('ActivityAndJudges'));
+  }
+  public function delete($id)
+  {
+    JudgesSetup::where('setup_id',$id)->delete();
+    Setup::where('id',$id)->delete();
+    return redirect()->back()->with('success','success');
   }
 }

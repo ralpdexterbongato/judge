@@ -45516,7 +45516,7 @@ exports = module.exports = __webpack_require__(10)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -45840,6 +45840,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
       }, function (error) {
         console.log(error);
+        vm.$swal('Sorry', error.response.data.message, 'error');
       });
     },
     getCriterias: function getCriterias() {
@@ -45862,7 +45863,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         console.log(response);
         vm.$swal('New', 'event created!', 'success');
       }, function (error) {
-        console.log(response);
+        console.log(error);
+        vm.$swal('Sorry', error.response.data.message, 'error');
       });
     }
   },

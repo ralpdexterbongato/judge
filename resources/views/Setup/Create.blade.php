@@ -14,7 +14,7 @@
       </div>
       <div class="input-field col s6">
         <i class="material-icons prefix">people</i>
-        <input name="ContestantNo" id="contestant"placeholder="Number of contestants" type="number" class="validate">
+        <input name="ContestantNo" min="2" id="contestant"placeholder="Number of contestants" type="number" class="validate">
         <label for="contestant">Contestants</label>
       </div>
       <div class="input-field col s12">

@@ -21,6 +21,10 @@ class EventController extends Controller
     }
     public function store(Request $request)
     {
+      $this->validate($request,[
+        'Title'=>'required',
+        'Criterias'=>'required',
+      ]);
       $eventTbl= new Event;
       $eventTbl->title=$request->Title;
       $eventTbl->save();

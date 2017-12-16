@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link rel="stylesheet" href="/css/mystyle.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.1.0/sweetalert2.css">
+    <script type="text/javascript" src="/js/jquery.js">
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.1.0/sweetalert2.min.js">
+
+    </script>
     <title>@yield('title')</title>
   </head>
   <body>
@@ -27,12 +33,12 @@
         <li><a href="/">Login</a></li>
         @endAuth
       </ul>
-      <nav class="blue">
+      <nav class="blue darken-1">
         <div class="nav-wrapper">
-          <a href="#!" class="brand-logo">J-APP</a>
+          <a href="#!" class="brand-logo"><i class="material-icons large">gavel</i></a>
           <ul class="right hide-on-med-and-down">
             <li><a href="/events-panel">Events</a></li>
-            <li><a href="#">Activities</a></li>
+            <li><a href="/setup-index">Activities</a></li>
             <!-- Dropdown Trigger -->
             <li>
               <a class="dropdown-button" href="#!" data-activates="dropdown1">
@@ -52,7 +58,7 @@
       @section('content')
       @show
     </div>
-    <footer class="page-footer blue">
+    <footer class="page-footer blue darken-1">
          <div class="container">
            <div class="row">
              <div class="col l6 s12">
@@ -77,8 +83,25 @@
            </div>
          </div>
        </footer>
-    <script type="text/javascript" src="/js/jquery.js">
-    </script>
+       @if (Session::get('success')!=null)
+         <script type="text/javascript">
+         swal(
+             'Success!',
+             'Thank you',
+             'success'
+           )
+         </script>
+       @endif
+       @if ($errors->all()!=null)
+         <script type="text/javascript">
+         swal(
+             'Oops! something is not right',
+             'Please fillup again',
+             'error'
+           )
+         </script>
+       @endif
+
     <script type="text/javascript">
       $(document).ready(function() {
         $(".button-collapse").sideNav();

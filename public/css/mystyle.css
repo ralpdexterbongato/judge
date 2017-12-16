@@ -106,7 +106,10 @@ nav
 *{
   box-sizing: border-box;
 }
-
+.brand-logo i
+{
+  font-size: 40px!important;
+}
 /*index*/
 .card-content
 {
@@ -126,4 +129,32 @@ nav
 {
   display: flex;
   min-height: 100vh;
+}
+
+
+/*setup index*/
+.activities-setup-container
+{
+  display: flex;
+  padding:50px 20px;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+.activities-box
+{
+  margin:20px;
+}
+.activities-box .card-content
+{
+  width: 410px;
+  height:320px;
+}
+.setup-actions
+{
+  display: flex;
+  justify-content: space-between;
+}
+.setup-actions a
+{
+  margin-left: 15px;
 }

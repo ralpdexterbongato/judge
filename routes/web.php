@@ -29,3 +29,5 @@ Route::get('/criteria-index','Criteria\CriteriaController@index');
 
 Route::get('/setup-create/{eventId}','SetupController@create');
 Route::post('/setup-store','SetupController@store');
+Route::get('/setup-index','SetupController@index');
+Route::delete('/setup-delete/{id}','SetupController@delete');

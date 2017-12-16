@@ -67,6 +67,11 @@
           },function(error)
           {
             console.log(error);
+            vm.$swal(
+              'Sorry',
+              error.response.data.message,
+              'error'
+            );
           });
       },
       getCriterias()
@@ -98,7 +103,12 @@
           );
         },function(error)
         {
-          console.log(response);
+          console.log(error);
+          vm.$swal(
+            'Sorry',
+            error.response.data.message,
+            'error'
+          );
         });
       }
     },
