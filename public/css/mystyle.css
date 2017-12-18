@@ -2,6 +2,10 @@ nav
 {
   padding:0px 50px;
 }
+.flex
+{
+  display: flex;
+}
 .material-icons
 {
   vertical-align: middle!important;
@@ -11,11 +15,16 @@ nav
   display: flex;
   min-height:100vh;
 }
+.bold
+{
+  font-weight: bold;
+}
 .login-form
 {
   margin:auto;
   padding:20px 30px;
-  width: 500px;
+  width: 400px;
+  border-radius: 5px;
 }
 @media (max-width:560px)
 {
@@ -106,9 +115,16 @@ nav
 *{
   box-sizing: border-box;
 }
-.brand-logo i
+.brand-logo
 {
-  font-size: 40px!important;
+  font-family: 'Pacifico', cursive;
+}
+@media (max-width:500px)
+{
+  .brand-logo
+  {
+    font-size: 17px!important;
+  }
 }
 /*index*/
 .card-content
@@ -157,4 +173,76 @@ nav
 .setup-actions a
 {
   margin-left: 15px;
+}
+
+.Rating-Create-Container
+{
+  min-height: 100vh;
+  padding:50px 100px;
+  display: flex;
+}
+
+.rating-navs
+{
+  display: flex;
+  justify-content: space-between;
+  margin-top: 90px;
+}
+.loader-container
+{
+  height:20px;
+  display: block;
+}
+.rating-card-title
+{
+  display: flex;
+  justify-content: space-between;
+}
+.rating-table-container
+{
+  max-width: 500px;
+  padding:0px;
+  margin:0 auto;
+  position: relative;
+}
+.rating-table-container .progress
+{
+  position: absolute;
+  top: -10px;
+}
+.rating-table-padding
+{
+  padding:20px;
+}
+.not-found
+{
+  margin:200px auto;
+  text-align: center;
+  font-size: 18px;
+}
+.found-container
+{
+  margin:auto;
+  width: 100%;
+}
+
+/*results*/
+.results-container
+{
+  padding:50px 60px;
+}
+@media (max-width:920px)
+{
+  .results-container
+  {
+    padding:10px;
+  }
+}
+.results-table-container
+{
+  margin-top: 50px;
+}
+.ranking-table-container
+{
+  margin-top: 50px;
 }

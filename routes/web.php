@@ -30,4 +30,15 @@ Route::get('/criteria-index','Criteria\CriteriaController@index');
 Route::get('/setup-create/{eventId}','SetupController@create');
 Route::post('/setup-store','SetupController@store');
 Route::get('/setup-index','SetupController@index');
+Route::get('/setup-index-data','SetupController@indexData');
 Route::delete('/setup-delete/{id}','SetupController@delete');
+Route::put('/setup-enable/{id}','SetupController@enable');
+Route::put('/setup-disable/{id}','SetupController@disable');
+
+Route::get('/rating-create','RatingController@create');
+Route::post('/rating-store','RatingController@store');
+Route::put('/rating-update/{setupId}','RatingController@update');
+Route::get('/rating-create-data','RatingController@createData');
+Route::get('/rating-get-data/{setupId}/{contestant}','RatingController@Contestant');
+
+Route::get('/results-show/{setupId}','ResultsController@show');

@@ -16,7 +16,13 @@ class LoginController extends Controller
     $credentials = array('username' => $request->username,'password'=>$request->password);
     if (Auth::attempt($credentials))
     {
-      return redirect('/events-panel');
+      if (Auth::user()->role ==1)
+      {
+        return redirect('/rating-create');
+      }else
+      {
+        return redirect('/events-panel');
+      }
     }
     return redirect('/')->with('error', 'Incorrect Username or Password');
   }

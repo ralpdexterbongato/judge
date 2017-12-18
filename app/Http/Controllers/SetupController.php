@@ -41,13 +41,25 @@ class SetupController extends Controller
   }
   public function index()
   {
-    $ActivityAndJudges=Setup::with('Judges','Event')->orderBy('id','DESC')->paginate(10);
-    return view('Setup.index',compact('ActivityAndJudges'));
+    return view('Setup.index');
+  }
+  public function indexData()
+  {
+    return Setup::with('Judges','Event')->orderBy('id','DESC')->paginate(10);
   }
   public function delete($id)
   {
     JudgesSetup::where('setup_id',$id)->delete();
     Setup::where('id',$id)->delete();
-    return redirect()->back()->with('success','success');
+    return ['success'=>'success'];
+  }
+  public function enable($id)
+  {
+    Setup::where('isActive', '0')->update(['isActive'=>null]);
+    Setup::where('id', $id)->update(['isActive'=>'0']);
+  }
+  public function disable($id)
+  {
+    Setup::where('id', $id)->update(['isActive'=>null]);
   }
 }

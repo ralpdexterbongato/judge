@@ -26,4 +26,13 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+
+    public function Setup($id)
+    {
+      return $this->belongsToMany('App\Setup','judges_setups')->wherePivot('user_id',$id)->where('isActive', '0');
+    }
+    // public function Ratings($judgeId)
+    // {
+    //   return $this->hasMany('App\Rating')->where('user_id', $judgeId
+    // }
 }

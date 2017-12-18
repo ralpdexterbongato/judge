@@ -19,6 +19,7 @@ class CreateRatingsTable extends Migration
             $table->integer('contestant_no');
             $table->integer('criteria_id');
             $table->decimal('rate');
+            $table->integer('user_id');
             $table->timestamps();
         });
     }

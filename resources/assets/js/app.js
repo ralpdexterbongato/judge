@@ -16,7 +16,9 @@ Vue.use(VueSweetalert2);
  */
 
 Vue.component('example', require('./components/Example.vue'));
+Vue.component('setupindex', require('./components/Setup/index.vue'));
 Vue.component('eventcreate', require('./components/Event/CreateEvent.vue'));
+Vue.component('ratingcreate', require('./components/Rating/create.vue'));
 const app = new Vue({
     el: '#app'
 });

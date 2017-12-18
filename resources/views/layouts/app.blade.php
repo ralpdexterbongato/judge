@@ -6,7 +6,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <link rel="stylesheet" href="/css/materialize.min.css">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Pacifico" rel="stylesheet">
     <link rel="stylesheet" href="/css/mystyle.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.1.0/sweetalert2.css">
     <script type="text/javascript" src="/js/jquery.js">
@@ -18,35 +18,35 @@
   </head>
   <body>
     <header>
+      @Auth
       <ul id="dropdown1" class="dropdown-content">
-        <li><a href="#!">sample</a></li>
-        <li><a href="#!">sample</a></li>
-        <li><a href="#!">sample</a></li>
         <li class="divider"></li>
-        @Auth
+        @if (Auth::user()->role==0)
         <li><a href="/register">Account</a></li>
+        @endif
         <li><a href="#!"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
         <form style="display:none" id="logout-form" action="{{route('logout')}}" method="post">
           {{ csrf_field() }}
         </form>
-        @else
-        <li><a href="/">Login</a></li>
-        @endAuth
       </ul>
+      @endAuth
       <nav class="blue darken-1">
         <div class="nav-wrapper">
-          <a href="#!" class="brand-logo"><i class="material-icons large">gavel</i></a>
+          <a href="/" class="brand-logo">Judging App</a>
           <ul class="right hide-on-med-and-down">
-            <li><a href="/events-panel">Events</a></li>
-            <li><a href="/setup-index">Activities</a></li>
+            @if (Auth::check() && Auth::user()->role==0)
+              <li><a href="/events-panel">Events</a></li>
+              <li><a href="/setup-index">Activities</a></li>
+            @endif
+            @Auth
+              <li><a href="/rating-create">Judging</a></li>
+            @endAuth
             <!-- Dropdown Trigger -->
             <li>
               <a class="dropdown-button" href="#!" data-activates="dropdown1">
                 @Auth
                 {{Auth::user()->name}}
                 <i class="material-icons right">arrow_drop_down</i>
-                @else
-                <i class="material-icons">person</i>
                 @endAuth
               </a>
             </li>
@@ -62,24 +62,23 @@
          <div class="container">
            <div class="row">
              <div class="col l6 s12">
-               <h5 class="white-text">Footer Content</h5>
-               <p class="grey-text text-lighten-4">You can use rows and columns here to organize your footer content.</p>
+               <h5 class="white-text">Capstone project</h5>
+               <p class="grey-text text-lighten-4"></p>
              </div>
              <div class="col l4 offset-l2 s12">
-               <h5 class="white-text">Links</h5>
+               <h5 class="white-text">Group members</h5>
                <ul>
-                 <li><a class="grey-text text-lighten-3" href="#!">Link 1</a></li>
-                 <li><a class="grey-text text-lighten-3" href="#!">Link 2</a></li>
-                 <li><a class="grey-text text-lighten-3" href="#!">Link 3</a></li>
-                 <li><a class="grey-text text-lighten-3" href="#!">Link 4</a></li>
+                 <li><a class="grey-text text-lighten-3" href="#!">Joronie Roluna</a></li>
+                 <li><a class="grey-text text-lighten-3" href="#!">Eunice Fe Claros</a></li>
+                 <li><a class="grey-text text-lighten-3" href="#!">Jacky Tirambolo</a></li>
+                 <li><a class="grey-text text-lighten-3" href="#!">Baw kinsa</a></li>
                </ul>
              </div>
            </div>
          </div>
          <div class="footer-copyright">
            <div class="container">
-           © 2014 Copyright Text
-           <a class="grey-text text-lighten-4 right" href="#!">More Links</a>
+           © 2017 Copyright, All rights reserved - Mater Dei College
            </div>
          </div>
        </footer>

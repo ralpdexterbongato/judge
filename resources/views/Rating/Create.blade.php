@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title')
-  Activities | setup
+  Juding Page
 @endsection
 @section('content')
-  <setupindex></setupindex>
+<ratingcreate></ratingcreate>
 @endsection

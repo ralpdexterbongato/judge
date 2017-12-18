@@ -70,7 +70,7 @@
 "use strict";
 
 
-var bind = __webpack_require__(4);
+var bind = __webpack_require__(5);
 var isBuffer = __webpack_require__(20);
 
 /*global toString:true*/
@@ -424,10 +424,10 @@ function getDefaultAdapter() {
   var adapter;
   if (typeof XMLHttpRequest !== 'undefined') {
     // For browsers use XHR adapter
-    adapter = __webpack_require__(6);
+    adapter = __webpack_require__(7);
   } else if (typeof process !== 'undefined') {
     // For node use HTTP adapter
-    adapter = __webpack_require__(6);
+    adapter = __webpack_require__(7);
   }
   return adapter;
 }
@@ -498,16 +498,125 @@ utils.forEach(['post', 'put', 'patch'], function forEachMethodWithData(method) {
 
 module.exports = defaults;
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)))
 
 /***/ }),
 /* 3 */
+/***/ (function(module, exports) {
+
+/* globals __VUE_SSR_CONTEXT__ */
+
+// IMPORTANT: Do NOT use ES2015 features in this file.
+// This module is a runtime utility for cleaner component module output and will
+// be included in the final webpack user bundle.
+
+module.exports = function normalizeComponent (
+  rawScriptExports,
+  compiledTemplate,
+  functionalTemplate,
+  injectStyles,
+  scopeId,
+  moduleIdentifier /* server only */
+) {
+  var esModule
+  var scriptExports = rawScriptExports = rawScriptExports || {}
+
+  // ES6 modules interop
+  var type = typeof rawScriptExports.default
+  if (type === 'object' || type === 'function') {
+    esModule = rawScriptExports
+    scriptExports = rawScriptExports.default
+  }
+
+  // Vue.extend constructor export interop
+  var options = typeof scriptExports === 'function'
+    ? scriptExports.options
+    : scriptExports
+
+  // render functions
+  if (compiledTemplate) {
+    options.render = compiledTemplate.render
+    options.staticRenderFns = compiledTemplate.staticRenderFns
+    options._compiled = true
+  }
+
+  // functional template
+  if (functionalTemplate) {
+    options.functional = true
+  }
+
+  // scopedId
+  if (scopeId) {
+    options._scopeId = scopeId
+  }
+
+  var hook
+  if (moduleIdentifier) { // server build
+    hook = function (context) {
+      // 2.3 injection
+      context =
+        context || // cached call
+        (this.$vnode && this.$vnode.ssrContext) || // stateful
+        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
+      // 2.2 with runInNewContext: true
+      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
+        context = __VUE_SSR_CONTEXT__
+      }
+      // inject component styles
+      if (injectStyles) {
+        injectStyles.call(this, context)
+      }
+      // register component module identifier for async chunk inferrence
+      if (context && context._registeredComponents) {
+        context._registeredComponents.add(moduleIdentifier)
+      }
+    }
+    // used by ssr in case component is cached and beforeCreate
+    // never gets called
+    options._ssrRegister = hook
+  } else if (injectStyles) {
+    hook = injectStyles
+  }
+
+  if (hook) {
+    var functional = options.functional
+    var existing = functional
+      ? options.render
+      : options.beforeCreate
+
+    if (!functional) {
+      // inject component registration as beforeCreate hook
+      options.beforeCreate = existing
+        ? [].concat(existing, hook)
+        : [hook]
+    } else {
+      // for template-only hot-reload because in that case the render fn doesn't
+      // go through the normalizer
+      options._injectStyles = hook
+      // register for functioal component in vue file
+      options.render = function renderWithStyleInjection (h, context) {
+        hook.call(context)
+        return existing(h, context)
+      }
+    }
+  }
+
+  return {
+    esModule: esModule,
+    exports: scriptExports,
+    options: options
+  }
+}
+
+
+/***/ }),
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports = __webpack_require__(19);
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -525,7 +634,7 @@ module.exports = function bind(fn, thisArg) {
 
 
 /***/ }),
-/* 5 */
+/* 6 */
 /***/ (function(module, exports) {
 
 // shim for using process in browser
@@ -715,7 +824,7 @@ process.umask = function() { return 0; };
 
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -726,7 +835,7 @@ var settle = __webpack_require__(23);
 var buildURL = __webpack_require__(25);
 var parseHeaders = __webpack_require__(26);
 var isURLSameOrigin = __webpack_require__(27);
-var createError = __webpack_require__(7);
+var createError = __webpack_require__(8);
 var btoa = (typeof window !== 'undefined' && window.btoa && window.btoa.bind(window)) || __webpack_require__(28);
 
 module.exports = function xhrAdapter(config) {
@@ -902,7 +1011,7 @@ module.exports = function xhrAdapter(config) {
 
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -927,7 +1036,7 @@ module.exports = function createError(message, config, code, request, response) 
 
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -939,7 +1048,7 @@ module.exports = function isCancel(value) {
 
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -965,7 +1074,7 @@ module.exports = Cancel;
 
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports) {
 
 /*
@@ -1047,120 +1156,11 @@ function toComment(sourceMap) {
 
 
 /***/ }),
-/* 11 */
-/***/ (function(module, exports) {
-
-/* globals __VUE_SSR_CONTEXT__ */
-
-// IMPORTANT: Do NOT use ES2015 features in this file.
-// This module is a runtime utility for cleaner component module output and will
-// be included in the final webpack user bundle.
-
-module.exports = function normalizeComponent (
-  rawScriptExports,
-  compiledTemplate,
-  functionalTemplate,
-  injectStyles,
-  scopeId,
-  moduleIdentifier /* server only */
-) {
-  var esModule
-  var scriptExports = rawScriptExports = rawScriptExports || {}
-
-  // ES6 modules interop
-  var type = typeof rawScriptExports.default
-  if (type === 'object' || type === 'function') {
-    esModule = rawScriptExports
-    scriptExports = rawScriptExports.default
-  }
-
-  // Vue.extend constructor export interop
-  var options = typeof scriptExports === 'function'
-    ? scriptExports.options
-    : scriptExports
-
-  // render functions
-  if (compiledTemplate) {
-    options.render = compiledTemplate.render
-    options.staticRenderFns = compiledTemplate.staticRenderFns
-    options._compiled = true
-  }
-
-  // functional template
-  if (functionalTemplate) {
-    options.functional = true
-  }
-
-  // scopedId
-  if (scopeId) {
-    options._scopeId = scopeId
-  }
-
-  var hook
-  if (moduleIdentifier) { // server build
-    hook = function (context) {
-      // 2.3 injection
-      context =
-        context || // cached call
-        (this.$vnode && this.$vnode.ssrContext) || // stateful
-        (this.parent && this.parent.$vnode && this.parent.$vnode.ssrContext) // functional
-      // 2.2 with runInNewContext: true
-      if (!context && typeof __VUE_SSR_CONTEXT__ !== 'undefined') {
-        context = __VUE_SSR_CONTEXT__
-      }
-      // inject component styles
-      if (injectStyles) {
-        injectStyles.call(this, context)
-      }
-      // register component module identifier for async chunk inferrence
-      if (context && context._registeredComponents) {
-        context._registeredComponents.add(moduleIdentifier)
-      }
-    }
-    // used by ssr in case component is cached and beforeCreate
-    // never gets called
-    options._ssrRegister = hook
-  } else if (injectStyles) {
-    hook = injectStyles
-  }
-
-  if (hook) {
-    var functional = options.functional
-    var existing = functional
-      ? options.render
-      : options.beforeCreate
-
-    if (!functional) {
-      // inject component registration as beforeCreate hook
-      options.beforeCreate = existing
-        ? [].concat(existing, hook)
-        : [hook]
-    } else {
-      // for template-only hot-reload because in that case the render fn doesn't
-      // go through the normalizer
-      options._injectStyles = hook
-      // register for functioal component in vue file
-      options.render = function renderWithStyleInjection (h, context) {
-        hook.call(context)
-        return existing(h, context)
-      }
-    }
-  }
-
-  return {
-    esModule: esModule,
-    exports: scriptExports,
-    options: options
-  }
-}
-
-
-/***/ }),
 /* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(13);
-module.exports = __webpack_require__(56);
+module.exports = __webpack_require__(57);
 
 
 /***/ }),
@@ -1188,7 +1188,9 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_sweetalert2__["a" /* default */]);
  */
 
 Vue.component('example', __webpack_require__(46));
-Vue.component('eventcreate', __webpack_require__(49));
+Vue.component('setupindex', __webpack_require__(49));
+Vue.component('eventcreate', __webpack_require__(50));
+Vue.component('ratingcreate', __webpack_require__(61));
 var app = new Vue({
   el: '#app'
 });
@@ -1218,7 +1220,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(3);
+window.axios = __webpack_require__(4);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -31022,7 +31024,7 @@ if (typeof jQuery === 'undefined') {
 
 
 var utils = __webpack_require__(0);
-var bind = __webpack_require__(4);
+var bind = __webpack_require__(5);
 var Axios = __webpack_require__(21);
 var defaults = __webpack_require__(2);
 
@@ -31057,9 +31059,9 @@ axios.create = function create(instanceConfig) {
 };
 
 // Expose Cancel & CancelToken
-axios.Cancel = __webpack_require__(9);
+axios.Cancel = __webpack_require__(10);
 axios.CancelToken = __webpack_require__(35);
-axios.isCancel = __webpack_require__(8);
+axios.isCancel = __webpack_require__(9);
 
 // Expose all/spread
 axios.all = function all(promises) {
@@ -31219,7 +31221,7 @@ module.exports = function normalizeHeaderName(headers, normalizedName) {
 "use strict";
 
 
-var createError = __webpack_require__(7);
+var createError = __webpack_require__(8);
 
 /**
  * Resolve or reject a Promise based on response status.
@@ -31638,7 +31640,7 @@ module.exports = InterceptorManager;
 
 var utils = __webpack_require__(0);
 var transformData = __webpack_require__(32);
-var isCancel = __webpack_require__(8);
+var isCancel = __webpack_require__(9);
 var defaults = __webpack_require__(2);
 
 /**
@@ -31791,7 +31793,7 @@ module.exports = function combineURLs(baseURL, relativeURL) {
 "use strict";
 
 
-var Cancel = __webpack_require__(9);
+var Cancel = __webpack_require__(10);
 
 /**
  * A `CancelToken` is an object that can be used to request cancellation of an operation.
@@ -42908,7 +42910,7 @@ exports.clearImmediate = clearImmediate;
     attachTo.clearImmediate = clearImmediate;
 }(typeof self === "undefined" ? typeof global === "undefined" ? this : global : self));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(5)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(1), __webpack_require__(6)))
 
 /***/ }),
 /* 40 */
@@ -44845,7 +44847,7 @@ if(false) {
 /* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(10)(undefined);
+exports = module.exports = __webpack_require__(11)(undefined);
 // imports
 
 
@@ -45314,7 +45316,7 @@ module.exports = function (css) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(11)
+var normalizeComponent = __webpack_require__(3)
 /* script */
 var __vue_script__ = __webpack_require__(47)
 /* template */
@@ -45434,15 +45436,63 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(59)
+/* template */
+var __vue_template__ = __webpack_require__(60)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Setup\\index.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-ad9850e8", Component.options)
+  } else {
+    hotAPI.reload("data-v-ad9850e8", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
 function injectStyle (ssrContext) {
   if (disposed) return
-  __webpack_require__(50)
+  __webpack_require__(51)
 }
-var normalizeComponent = __webpack_require__(11)
+var normalizeComponent = __webpack_require__(3)
 /* script */
-var __vue_script__ = __webpack_require__(54)
+var __vue_script__ = __webpack_require__(55)
 /* template */
-var __vue_template__ = __webpack_require__(55)
+var __vue_template__ = __webpack_require__(56)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -45482,17 +45532,17 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(51);
+var content = __webpack_require__(52);
 if(typeof content === 'string') content = [[module.i, content, '']];
 if(content.locals) module.exports = content.locals;
 // add the styles to the DOM
-var update = __webpack_require__(52)("33c59404", content, false);
+var update = __webpack_require__(53)("33c59404", content, false);
 // Hot Module Replacement
 if(false) {
  // When the styles change, update the <style> tags
@@ -45508,10 +45558,10 @@ if(false) {
 }
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(10)(undefined);
+exports = module.exports = __webpack_require__(11)(undefined);
 // imports
 
 
@@ -45522,7 +45572,7 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 
 /***/ }),
-/* 52 */
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /*
@@ -45541,7 +45591,7 @@ if (typeof DEBUG !== 'undefined' && DEBUG) {
   ) }
 }
 
-var listToStyles = __webpack_require__(53)
+var listToStyles = __webpack_require__(54)
 
 /*
 type StyleObject = {
@@ -45743,7 +45793,7 @@ function applyToTag (styleElement, obj) {
 
 
 /***/ }),
-/* 53 */
+/* 54 */
 /***/ (function(module, exports) {
 
 /**
@@ -45776,12 +45826,12 @@ module.exports = function listToStyles (parentId, list) {
 
 
 /***/ }),
-/* 54 */
+/* 55 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(4);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
 //
 //
@@ -45874,7 +45924,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 55 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -46033,10 +46083,772 @@ if (false) {
 }
 
 /***/ }),
-/* 56 */
+/* 57 */
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 58 */,
+/* 59 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      IndexData: []
+    };
+  },
+
+  // props: [],
+  methods: {
+    FetchData: function FetchData() {
+      var vm = this;
+      __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/setup-index-data').then(function (response) {
+        console.log(response);
+        vm.IndexData = response.data.data;
+      });
+    },
+    Delete: function Delete(id) {
+      var vm = this;
+      swal({
+        title: 'Are you sure?',
+        text: "You won't be able to revert this!",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes, delete it!'
+      }).then(function (result) {
+        if (result.value) {
+          __WEBPACK_IMPORTED_MODULE_0_axios___default.a.delete('/setup-delete/' + id).then(function (response) {
+            console.log(response);
+            vm.FetchData();
+            swal('Deleted!', 'Your file has been deleted.', 'success');
+          });
+        }
+      });
+    },
+    updateEnable: function updateEnable(id) {
+      var vm = this;
+      swal({
+        title: 'Are you sure?',
+        text: "The other enabled setup will be disabled",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes,enable it!'
+      }).then(function (result) {
+        if (result.value) {
+          __WEBPACK_IMPORTED_MODULE_0_axios___default.a.put('/setup-enable/' + id).then(function (response) {
+            console.log(response);
+            swal('Enabled!', 'Setup enabled', 'success');
+            vm.FetchData();
+          });
+        }
+      });
+    },
+    updateDisable: function updateDisable(id) {
+      var vm = this;
+      swal({
+        title: 'Are you sure?',
+        text: "This setup will be disabled",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes,disable it!'
+      }).then(function (result) {
+        if (result.value) {
+          __WEBPACK_IMPORTED_MODULE_0_axios___default.a.put('/setup-disable/' + id).then(function (response) {
+            console.log(response);
+            swal('Disabled!', 'Setup disabled', 'success');
+            vm.FetchData();
+          });
+        }
+      });
+    }
+  },
+  created: function created() {
+    this.FetchData();
+  }
+});
+
+/***/ }),
+/* 60 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "div",
+    { staticClass: "activities-setup-container" },
+    _vm._l(_vm.IndexData, function(data) {
+      return _c("div", { staticClass: "activities-box" }, [
+        _c("div", { staticClass: "card blue darken-1" }, [
+          _c("div", { staticClass: "card-content white-text" }, [
+            _c("span", { staticClass: "card-title" }, [
+              _vm._v(_vm._s(data.Name))
+            ]),
+            _vm._v(" "),
+            _c("table", [
+              _c("tr", [
+                _c("th", [_vm._v("Event:")]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(data.event.title))])
+              ]),
+              _vm._v(" "),
+              _c("tr", [
+                _c("th", [_vm._v("Contestants:")]),
+                _vm._v(" "),
+                _c("td", [_vm._v(_vm._s(data.NumberContestant))])
+              ]),
+              _vm._v(" "),
+              _vm._m(0, true),
+              _vm._v(" "),
+              _c(
+                "tr",
+                _vm._l(data.judges, function(judge) {
+                  return _c("td", [_vm._v(_vm._s(judge.name))])
+                })
+              )
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-action white setup-actions" }, [
+            _c("p", [_vm._v(_vm._s(data.created_at))]),
+            _vm._v(" "),
+            _c("span", [
+              data.isActive == null
+                ? _c(
+                    "a",
+                    {
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.updateEnable(data.id)
+                        }
+                      }
+                    },
+                    [_vm._v("Disabled")]
+                  )
+                : _c(
+                    "a",
+                    {
+                      staticClass: "green-text",
+                      attrs: { href: "#" },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.updateDisable(data.id)
+                        }
+                      }
+                    },
+                    [_vm._v("Enabled")]
+                  ),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-floating",
+                  attrs: { href: "/results-show/" + data.id }
+                },
+                [
+                  _c("i", { staticClass: "material-icons white-text" }, [
+                    _vm._v("remove_red_eye")
+                  ])
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "a",
+                {
+                  staticClass: "btn btn-floating",
+                  attrs: { href: "#" },
+                  on: {
+                    click: function($event) {
+                      _vm.Delete(data.id)
+                    }
+                  }
+                },
+                [
+                  _c("i", { staticClass: "material-icons white-text" }, [
+                    _vm._v("delete")
+                  ])
+                ]
+              )
+            ])
+          ])
+        ])
+      ])
+    })
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [_c("th", [_vm._v("Judges:")])])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-ad9850e8", module.exports)
+  }
+}
+
+/***/ }),
+/* 61 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(3)
+/* script */
+var __vue_script__ = __webpack_require__(62)
+/* template */
+var __vue_template__ = __webpack_require__(63)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Rating\\create.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-0ee22698", Component.options)
+  } else {
+    hotAPI.reload("data-v-0ee22698", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      Activity: [],
+      EventCrit: [],
+      Rates: [],
+      CurrentContestant: 1,
+      contestantData: [],
+      updateRates: [],
+      Average: 0,
+      minimum: 75,
+      Loading: false,
+      Absent: ''
+    };
+  },
+
+  props: [],
+  methods: {
+    fetchData: function fetchData() {
+      var vm = this;
+      __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/rating-create-data').then(function (response) {
+        console.log(response);
+
+        if (response.data.activity == null) {
+          swal('Oops...', 'No Activity event is set for you!', 'error');
+        } else {
+          vm.Activity = response.data.activity[0];
+          vm.EventCrit = response.data.eventCriteria;
+          vm.getcontestant();
+        }
+      });
+    },
+    save: function save() {
+      var vm = this;
+      __WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/rating-store', {
+        setUp: this.Activity.id,
+        Crit: this.EventCrit.criteria,
+        Rates: this.Rates,
+        Contestant: this.CurrentContestant,
+        Absent: this.Absent
+      }).then(function (response) {
+        if (response.data.error != null) {
+          swal('Oops...', response.data.error, 'error');
+        } else {
+          swal('Success!', 'Submitted successfully!', 'success');
+          console.log(response);
+          vm.Rates = [];
+          vm.getcontestant();
+        }
+      }, function (error) {
+        console.log(error);
+        swal('Ooops!', error.response.data.message, 'error');
+      });
+    },
+    getcontestant: function getcontestant() {
+      this.Loading = true;
+      var vm = this;
+      __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/rating-get-data/' + this.Activity.id + '/' + this.CurrentContestant).then(function (response) {
+        console.log(response);
+        vm.contestantData = response.data.ratings;
+        vm.Average = response.data.average;
+        vm.Loading = false;
+      });
+    },
+    nextBtn: function nextBtn() {
+      var _this = this;
+
+      if (this.Activity.NumberContestant == this.CurrentContestant) {
+        return false;
+      } else if (this.contestantData == null) {
+        swal({
+          title: 'Why?',
+          text: "This contestant is absent?",
+          type: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, proceed'
+        }).then(function (result) {
+          if (result.value) {
+            _this.updateRates = [];
+            _this.Rates = [];
+            _this.Absent = '0';
+            _this.save();
+            _this.CurrentContestant++;
+            _this.getcontestant();
+          }
+        });
+      } else {
+        this.updateRates = [];
+        this.Rates = [];
+        this.CurrentContestant++;
+        this.getcontestant();
+      }
+    },
+    backBtn: function backBtn() {
+      if (1 == this.CurrentContestant) {
+        return false;
+      } else {
+        this.updateRates = [];
+        this.Rates = [];
+        this.CurrentContestant--;
+        this.getcontestant();
+      }
+    },
+    update: function update() {
+      var vm = this;
+      __WEBPACK_IMPORTED_MODULE_0_axios___default.a.put('/rating-update/' + this.Activity.id, {
+        Contestant: this.CurrentContestant,
+        UpdateRates: this.updateRates,
+        Criterias: this.EventCrit.criteria
+      }).then(function (response) {
+        if (response.data.error != null) {
+          vm.updateRates = [];
+          vm.Rates = [];
+          swal('Oops...', response.data.error, 'error');
+          vm.getcontestant();
+        } else {
+          vm.updateRates = [];
+          vm.Rates = [];
+          swal('Updated!', 'Updated successfully!', 'success');
+          console.log(response);
+          vm.getcontestant();
+        }
+      });
+    }
+  },
+  created: function created() {
+    this.fetchData();
+  }
+});
+
+/***/ }),
+/* 63 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "Rating-Create-Container" }, [
+    _vm.Activity.Name != null
+      ? _c("div", { staticClass: "found-container" }, [
+          _c("h5", [_vm._v("ACTIVITY: " + _vm._s(_vm.Activity.Name))]),
+          _vm._v(" "),
+          _c("h6", [_vm._v("EVENT: " + _vm._s(_vm.EventCrit.title))]),
+          _vm._v(" "),
+          _c("div", { staticClass: "rating-navs" }, [
+            _c(
+              "a",
+              {
+                staticClass:
+                  "btn-floating btn-large waves-effect waves-light blue darken-1",
+                on: {
+                  click: function($event) {
+                    _vm.backBtn()
+                  }
+                }
+              },
+              [
+                _c("i", { staticClass: "material-icons" }, [
+                  _vm._v("arrow_back")
+                ])
+              ]
+            ),
+            _vm._v(" "),
+            _c(
+              "a",
+              {
+                staticClass:
+                  "btn-floating btn-large waves-effect waves-light blue darken-1",
+                on: {
+                  click: function($event) {
+                    _vm.nextBtn()
+                  }
+                }
+              },
+              [
+                _c("i", { staticClass: "material-icons" }, [
+                  _vm._v("arrow_forward")
+                ])
+              ]
+            )
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "rating-table-container z-depth-1" }, [
+            _vm.Loading
+              ? _c("div", { staticClass: "progress" }, [
+                  _c("div", { staticClass: "indeterminate" })
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "rating-table-padding" }, [
+              _c("div", { staticClass: "rating-card-title" }, [
+                _vm._m(0),
+                _vm._v(" "),
+                _c("h5", { staticClass: "contestant-number" }, [
+                  _vm._v("Contestant No. " + _vm._s(_vm.CurrentContestant))
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "divider" }),
+              _vm._v(" "),
+              _vm.contestantData != null
+                ? _c(
+                    "table",
+                    [
+                      _vm._l(_vm.EventCrit.criteria, function(criteria, loop) {
+                        return _c("tr", [
+                          _c("th", [_vm._v(_vm._s(criteria.name))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm.contestantData[loop]
+                              ? _c("input", {
+                                  directives: [
+                                    {
+                                      name: "model",
+                                      rawName: "v-model",
+                                      value: (_vm.updateRates[loop] =
+                                        _vm.contestantData[loop].rate),
+                                      expression:
+                                        "updateRates[loop] = contestantData[loop].rate"
+                                    }
+                                  ],
+                                  attrs: { type: "number", step: "0.01" },
+                                  domProps: {
+                                    value: (_vm.updateRates[loop] =
+                                      _vm.contestantData[loop].rate)
+                                  },
+                                  on: {
+                                    input: function($event) {
+                                      if ($event.target.composing) {
+                                        return
+                                      }
+                                      _vm.$set(
+                                        (_vm.updateRates[loop] =
+                                          _vm.contestantData[loop]),
+                                        "rate",
+                                        $event.target.value
+                                      )
+                                    }
+                                  }
+                                })
+                              : _vm._e()
+                          ])
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c("th", [_vm._v("Total avarage:")]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("h5", { staticClass: "right" }, [
+                            _vm._v(_vm._s(_vm.Average) + "%")
+                          ])
+                        ])
+                      ]),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c("th"),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c(
+                            "a",
+                            {
+                              staticClass:
+                                "btn right waves-effect blue darken-1 waves-light",
+                              on: {
+                                click: function($event) {
+                                  _vm.update()
+                                }
+                              }
+                            },
+                            [_vm._v("Update")]
+                          )
+                        ])
+                      ])
+                    ],
+                    2
+                  )
+                : _c(
+                    "table",
+                    [
+                      _vm._l(_vm.EventCrit.criteria, function(criteria, index) {
+                        return _c("tr", [
+                          _c("th", [_vm._v(_vm._s(criteria.name))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: _vm.Rates[index],
+                                  expression: "Rates[index]"
+                                }
+                              ],
+                              attrs: { type: "number", step: "0.01" },
+                              domProps: { value: _vm.Rates[index] },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    _vm.Rates,
+                                    index,
+                                    $event.target.value
+                                  )
+                                }
+                              }
+                            })
+                          ])
+                        ])
+                      }),
+                      _vm._v(" "),
+                      _vm._m(1),
+                      _vm._v(" "),
+                      _c("tr", [
+                        _c("th"),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c(
+                            "a",
+                            {
+                              staticClass:
+                                "btn right waves-effect blue darken-1 waves-light",
+                              on: {
+                                click: function($event) {
+                                  _vm.save()
+                                }
+                              }
+                            },
+                            [_vm._v("Save")]
+                          )
+                        ])
+                      ])
+                    ],
+                    2
+                  )
+            ])
+          ])
+        ])
+      : _c("div", { staticClass: "not-found" }, [_vm._m(2)])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h5", [
+      _c("i", { staticClass: "material-icons" }, [
+        _vm._v("format_list_numbered")
+      ]),
+      _vm._v(" Scoring card")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [_vm._v("Total avarage:")]),
+      _vm._v(" "),
+      _c("td", [_c("h5", { staticClass: "right" }, [_vm._v("0%")])])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("h5", { staticClass: "grey-text" }, [
+      _c("i", { staticClass: "material-icons" }, [_vm._v("close")]),
+      _vm._v(" No Activity event found")
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-0ee22698", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);
