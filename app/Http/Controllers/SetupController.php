@@ -9,11 +9,15 @@ use App\Setup;
 use App\JudgesSetup;
 class SetupController extends Controller
 {
-
+  public function __construct()
+  {
+    $this->middleware('auth');
+    $this->middleware('AdminOnly');
+  }
   public function create($eventId)
   {
     $eventdata=Event::with('Criteria')->find($eventId);
-    $judges=User::where('role', '1')->get();
+    $judges=User::where('role', '1')->whereNull('disabled')->get();
     $EventId = array('id' => $eventId);
     $EventId = (object)$EventId;
     return view('Setup.Create',compact('eventdata','judges','EventId'));
@@ -49,7 +53,6 @@ class SetupController extends Controller
   }
   public function delete($id)
   {
-    JudgesSetup::where('setup_id',$id)->delete();
     Setup::where('id',$id)->delete();
     return ['success'=>'success'];
   }

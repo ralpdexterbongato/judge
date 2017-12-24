@@ -7,9 +7,10 @@
         <label for="EventName">Event Title</label>
       </div>
       <div class="criterias">
-        <p v-for="criteria in allCriteria">
+        <p v-for="criteria in allCriteria" class="z-depth-1">
           <input v-model="checkedCriteria" :value="criteria.id" type="checkbox" :id="'criteria'+criteria.id" />
           <label :for="'criteria'+criteria.id">{{criteria.name}}</label>
+          <i class="material-icons" v-on:click="CriteriaRemove(criteria.id)">close</i>
         </p>
       </div>
       <div class="input-field col s6">
@@ -110,6 +111,42 @@
             'error'
           );
         });
+      },
+      CriteriaRemove(id)
+      {
+        var vm=this;
+        swal({
+          title: 'Are you sure?',
+          text: "Please confirm",
+          type: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Confirm'
+        }).then((result) => {
+          if (result.value) {
+            axios.delete(`/criteria-delete/`+id).then(function(response)
+            {
+              console.log(response);
+              if (response.data.error!=null)
+              {
+                vm.$swal(
+                  'Sorry',
+                  response.data.error,
+                  'error'
+                );
+              }else
+              {
+                vm.getCriterias();
+                swal(
+                  'Deleted!',
+                  'Your file has been deleted.',
+                  'success'
+                );
+              }
+            });
+          }
+        })
       }
     },
     created () {

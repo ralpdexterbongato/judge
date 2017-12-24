@@ -9,6 +9,10 @@ use Auth;
 use App\Event;
 class RatingController extends Controller
 {
+    public function __construct()
+    {
+      $this->middleware('auth');
+    }
     public function create()
     {
       return view('Rating.Create');
@@ -35,13 +39,15 @@ class RatingController extends Controller
         }
         foreach ($request->Rates as $req)
         {
-          if ($req==null)
+          if ($req==null||$req=='')
           {
             return ['error'=>'Please fill all scores'];
-          }elseif ($req<75)
+          }
+          if ($req<75)
           {
             return ['error'=>'Score must be atleast 75'];
-          }elseif ($req>100)
+          }
+          if ($req>100)
           {
             return ['error'=>'Score maximum is 100'];
           }

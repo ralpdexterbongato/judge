@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('title')
-Admin
+Manage accounts
 @endsection
 @section('content')
-<eventindex></eventindex>
+<accountindex></accountindex>
 @endsection

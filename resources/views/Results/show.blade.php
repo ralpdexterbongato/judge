@@ -4,10 +4,10 @@
 @endsection
 @section('content')
   <div class="results-container">
-    <h5>Activity: CCICT Day</h5>
-    <h6>Event: Singing event</h6>
-    <h6>Total contestants: 10</h6>
-    @if (isset($ranking[0]))
+    <h5>Activity: {{$SetupData[0]->Name}}</h5>
+    <h6>Event: {{$SetupData[0]->event->title}}</h6>
+    <h6>Total contestants: {{$SetupData[0]->NumberContestant}}</h6>
+    @if (Session::has('SessionRank'))
     <div class="ranking-table-container">
       <table class="striped responsive-table">
         <thead>
@@ -18,11 +18,15 @@
           </tr>
         </thead>
         <tbody>
-          @foreach ($ranking as $loopkey=> $rank)
+          @foreach (Session::get('SessionRank') as $key => $displayrank)
           <tr>
-            <th>{{$loopkey+1}} Placer</th>
-            <td>{{$rank->Contestant}}</td>
-            <td><span class="bold">{{number_format($rank->avg,2,'.',',')}}%</span></td>
+            @if ($displayrank->place-1==0)
+              <th><i class="material-icons">grade</i> Winner</th>
+            @else
+              <th>{{$displayrank->place-1}} runner up</th>
+            @endif
+            <td>{{$displayrank->contestant}}</td>
+            <td><span class="bold">{{number_format($displayrank->avg,2,'.',',')}}%</span></td>
           </tr>
           @endforeach
         </tbody>
@@ -40,7 +44,7 @@
           </tr>
         </thead>
         <tbody>
-          @for ($i = 0; $i < $TotalContestant[0]->NumberContestant; $i++)
+          @for ($i = 0; $i < $SetupData[0]->NumberContestant; $i++)
           <tr>
             <td>{{$i+1}}</td>
             @foreach ($judges as $key =>$judge)

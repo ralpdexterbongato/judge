@@ -9,10 +9,10 @@
       {{ csrf_field() }}
       <div class="input-field col s6">
         <i class="material-icons prefix">account_circle</i>
-        <input id="icon_prefix" name="fullname" type="text" class="validate">
+        <input id="icon_prefix" name="name" type="text" class="validate">
         <label for="icon_prefix">Full name</label>
-        @if ($errors->has('fullname'))
-          <p class="form-error red-text">{{$errors->first('fullname')}}</p>
+        @if ($errors->has('name'))
+          <p class="form-error red-text">{{$errors->first('name')}}</p>
         @endif
       </div>
       <div class="input-field col s6">

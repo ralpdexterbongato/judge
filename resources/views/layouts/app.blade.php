@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <link rel="shortcut icon" href="icon.png">
     <link rel="stylesheet" href="/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Pacifico" rel="stylesheet">
     <link rel="stylesheet" href="/css/mystyle.css">
@@ -12,17 +13,41 @@
     <script type="text/javascript" src="/js/jquery.js">
     </script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.1.0/sweetalert2.min.js">
-
     </script>
     <title>@yield('title')</title>
   </head>
   <body>
     <header>
       @Auth
+      <ul id="slide-out" class="side-nav">
+        <li>
+          <div class="user-view">
+            <div class="background">
+              <img src="/img/bg.jpg">
+            </div>
+            <a href="#!user"><img></a>
+            <a href="#!name"><span class="white-text name">{{Auth::user()->name}}</span></a>
+            <a href="#!email"><span class="white-text email">{{Auth::user()->username}}</span></a>
+          </div>
+        </li>
+        @if (Auth::check() && Auth::user()->role==0)
+        <li><a class="waves-effect" href="/events-panel"><i class="material-icons">cloud</i>Events</a></li>
+        <li><a class="waves-effect" href="/setup-index"><i class="material-icons">cloud</i>Activities</a></li>
+        @endif
+        <li><a class="waves-effect" href="/rating-create"><i class="material-icons">cloud</i>Judging</a></li>
+        @if (Auth::check() && Auth::user()->role==0)
+        <li><div class="divider"></div></li>
+        <li><a class="waves-effect" href="/register"><i class="material-icons">add</i>Account</a></li>
+        <li><a class="waves-effect" href="/account-index"><i class="material-icons">people</i>Manage accounts</a></li>
+        @endif
+        <li><div class="divider"></div></li>
+        <li><a class="waves-effect" href="#!" onclick="event.preventDefault(); document.getElementById('logout-form').submit();"><i class="material-icons">exit_to_app</i>Logout</a></li>
+      </ul>
       <ul id="dropdown1" class="dropdown-content">
         <li class="divider"></li>
         @if (Auth::user()->role==0)
-        <li><a href="/register">Account</a></li>
+        <li><a href="/register">Create account</a></li>
+        <li><a href="/account-index">Manage accounts</a></li>
         @endif
         <li><a href="#!"onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Logout</a></li>
         <form style="display:none" id="logout-form" action="{{route('logout')}}" method="post">
@@ -31,6 +56,9 @@
       </ul>
       @endAuth
       <nav class="blue darken-1">
+        @if (Auth::check())
+          <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
+        @endif
         <div class="nav-wrapper">
           <a href="/" class="brand-logo">Judging App</a>
           <ul class="right hide-on-med-and-down">
@@ -100,11 +128,23 @@
            )
          </script>
        @endif
+       @if (Session::has('error'))
+         <script type="text/javascript">
+         swal(
+             'Oops! something is not right',
+             '{{Session::get('error')}}',
+             'error'
+           )
+         </script>
+       @endif
 
     <script type="text/javascript">
       $(document).ready(function() {
         $(".button-collapse").sideNav();
         $('select').material_select();
+         $(".button-collapse").sideNav();
+         $('.modal').modal();
+
       });
     </script>
     <script type="text/javascript" src="/js/app.js">

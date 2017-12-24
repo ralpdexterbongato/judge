@@ -2,6 +2,12 @@ nav
 {
   padding:0px 50px;
 }
+@media (max-width:500px)
+{
+  nav{
+    padding:0px 5px;
+  }
+}
 .flex
 {
   display: flex;
@@ -10,10 +16,23 @@ nav
 {
   vertical-align: middle!important;
 }
+.pagination
+{
+  display: flex;
+  justify-content: center;
+}
 .login-form-container
 {
   display: flex;
   min-height:100vh;
+}
+.login-btn-container
+{
+  display: flex;
+}
+.login-btn-container button
+{
+  margin:0 auto;
 }
 .bold
 {
@@ -30,7 +49,7 @@ nav
 {
   .login-form
   {
-    margin: 10px;
+    margin:0px auto;
   }
 }
 .content-container
@@ -82,6 +101,17 @@ nav
   display: flex;
   justify-content: space-between;
 }
+.delete-event-btn:hover
+{
+  transform: rotateY(180deg);
+}
+.delete-event-btn
+{
+  cursor: pointer;
+  color: #f5f5f5;
+  transform: rotateX(180deg);
+  transition: transform .5s;
+}
 
 /*create event*/
 .create-event-container
@@ -95,6 +125,14 @@ nav
   width: 500px;
   padding:20px;
 }
+@media (max-width:500px)
+{
+  .create-event-form
+  {
+    padding:5px;
+  }
+}
+
 .criterias
 {
   display: flex;
@@ -105,7 +143,34 @@ nav
 .criterias p
 {
   margin:10px;
+  border-radius: 5px;
+  padding:6px 12px;
+  background: #fff;
+  display: flex;
+  flex-wrap: wrap;
 }
+.criterias p i
+{
+  margin-left: 20px;
+  color: #ccc;
+}
+@media (max-width:500px)
+{
+  .criterias p i
+  {
+    margin-left:5px;
+  }
+  .criterias p label
+  {
+    font-size: 13px!important;
+  }
+}
+.criterias p i:hover
+{
+  cursor: pointer;
+  color:grey;
+}
+
 .save-event-btn
 {
   width: 100%;
@@ -126,12 +191,20 @@ nav
     font-size: 17px!important;
   }
 }
+@media (max-width:450px)
+{
+  .brand-logo
+  {
+    font-size: 15px!important;
+  }
+}
 /*index*/
 .card-content
 {
   height:180px;
   overflow-x: hidden;
   overflow-y: auto;
+  padding:10px!important;
 }
 
 /*setup*/
@@ -160,9 +233,20 @@ nav
 {
   margin:20px;
 }
+@media (max-width:500px)
+{
+  .activities-setup-container
+  {
+    padding:10px;
+  }
+  .activities-box
+  {
+    margin:10px;
+  }
+}
 .activities-box .card-content
 {
-  width: 410px;
+  max-width: 410px;
   height:320px;
 }
 .setup-actions
@@ -175,19 +259,51 @@ nav
   margin-left: 15px;
 }
 
+.setup-btns-container
+{
+  display: flex;
+  flex-wrap: wrap;
+}
+
 .Rating-Create-Container
 {
   min-height: 100vh;
   padding:50px 100px;
   display: flex;
 }
-
 .rating-navs
 {
   display: flex;
   justify-content: space-between;
   margin-top: 90px;
 }
+.rating-card-title h5,.rating-card-title h6
+{
+  font-size: 18px;
+}
+@media(max-width:640px)
+{
+  .Rating-Create-Container
+  {
+    padding:20px;
+  }
+  .rating-navs
+  {
+    margin-top: 30px;
+  }
+}
+@media(max-width:500px)
+{
+  .Rating-Create-Container
+  {
+    padding:5px;
+  }
+  .rating-card-title h6
+  {
+    display: none;
+  }
+}
+
 .loader-container
 {
   height:20px;
@@ -245,4 +361,32 @@ nav
 .ranking-table-container
 {
   margin-top: 50px;
+}
+
+
+/*account management css*/
+.Account-manager-container
+{
+  padding: 50px;
+}
+@media (max-width:500px)
+{
+  .title-of-page
+  {
+    text-align: center;
+  }
+  .Account-manager-container
+  {
+    padding:5px;
+  }
+}
+.accounts-table-container td i:hover
+{
+  color: #1E88E5;
+}
+.accounts-table-container td i
+{
+  margin:5px;
+  color: rgba(0, 0, 0, 0.7);
+  cursor: pointer;
 }

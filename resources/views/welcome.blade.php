@@ -26,9 +26,11 @@
             <p class="red-text form-error">{{$errors->first('password')}}</p>
           @endif
         </div>
-        <button class="btn pulse waves-effect waves-light right blue" type="submit" name="action">Login
-          <i class="material-icons right">send</i>
-        </button>
+        <div class="login-btn-container">
+          <button class="btn pulse waves-effect waves-light blue" type="submit" name="action">Login
+            <i class="material-icons right">send</i>
+          </button>
+        </div>
       </form>
 
     </div>

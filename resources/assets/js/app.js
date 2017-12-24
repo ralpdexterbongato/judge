@@ -9,6 +9,7 @@ require('./bootstrap');
 window.Vue = require('vue');
 import VueSweetalert2 from 'vue-sweetalert2';
 Vue.use(VueSweetalert2);
+
 /**
  * Next, we will create a fresh Vue application instance and attach it to
  * the page. Then, you may begin adding components to this application
@@ -18,7 +19,9 @@ Vue.use(VueSweetalert2);
 Vue.component('example', require('./components/Example.vue'));
 Vue.component('setupindex', require('./components/Setup/index.vue'));
 Vue.component('eventcreate', require('./components/Event/CreateEvent.vue'));
+Vue.component('eventindex', require('./components/Event/index.vue'));
 Vue.component('ratingcreate', require('./components/Rating/create.vue'));
+Vue.component('accountindex', require('./components/Account/index.vue'));
 const app = new Vue({
     el: '#app'
 });

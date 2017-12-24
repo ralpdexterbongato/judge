@@ -13,7 +13,7 @@
       </div>
       <div class="rating-table-padding">
         <div class="rating-card-title">
-          <h5><i class="material-icons">format_list_numbered</i> Scoring card</h5>
+          <h6><i class="material-icons">format_list_numbered</i> Scoring card</h6>
           <h5 class="contestant-number">Contestant No. {{CurrentContestant}}</h5>
         </div>
         <div class="divider">
@@ -42,7 +42,7 @@
             <td><h5 class="right">0%</h5></td>
           </tr>
           <tr>
-            <th></th>
+            <th><a href="#" class="btn btn-floating red" v-on:click.prevent="ContestantAbsent()"><i class="material-icons">close</i></a></th>
             <td><a v-on:click="save()" class="btn right waves-effect blue darken-1 waves-light">Save</a></td>
           </tr>
         </table>
@@ -122,6 +122,7 @@ import axios from 'axios';
             );
             console.log(response);
             vm.Rates=[];
+            vm.Absent='';
             vm.getcontestant();
           }
         },function(error)
@@ -222,6 +223,26 @@ import axios from 'axios';
             );
             console.log(response);
             vm.getcontestant();
+          }
+        })
+      },
+      ContestantAbsent()
+      {
+        swal({
+          title: 'Confirmation',
+          text: "This contestant is absent?",
+          type: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, proceed'
+        }).then((result) => {
+          if (result.value) {
+            this.updateRates=[];
+            this.Rates=[];
+            this.Absent='0';
+            this.save();
+            this.getcontestant();
           }
         })
       }

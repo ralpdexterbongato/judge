@@ -9,11 +9,15 @@ class EventController extends Controller
     public function __construct()
     {
       $this->middleware('auth');
+      $this->middleware('AdminOnly');
     }
     public function index()
     {
-      $events=Event::orderBy('id','DESC')->with('Criteria')->paginate(5);
-      return view('Event.Index',compact('events'));
+      return view('Event.Index');
+    }
+    public function indexData()
+    {
+      return $events=Event::orderBy('id','DESC')->with('Criteria')->paginate(10);
     }
     public function create()
     {
@@ -36,5 +40,9 @@ class EventController extends Controller
       }
       CriteriaEvent::insert($forEventCriteria);
       return ['success'=>'success'];
+    }
+    public function delete($id)
+    {
+      Event::where('id', $id)->delete();
     }
 }

@@ -7,6 +7,11 @@ use App\Http\Controllers\Controller;
 use App\User;
 class RegisterController extends Controller
 {
+    public function __construct()
+    {
+      $this->middleware('AdminOnly');
+      $this->middleware('auth');
+    }
     public function create()
     {
       return view('Auth.register');
@@ -14,8 +19,8 @@ class RegisterController extends Controller
     public function store(Request $request)
     {
       $this->validate($request,[
-        'fullname'=>'required',
-        'username'=>'required',
+        'name'=>'required|unique:users',
+        'username'=>'required|unique:users',
         'password'=>'required|confirmed',
         'role'=>'required|max:1|numeric'
       ]);
