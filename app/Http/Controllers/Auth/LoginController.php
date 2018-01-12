@@ -15,7 +15,7 @@ class LoginController extends Controller
       'password'=>'required|max:25'
     ]);
     $checkifdisabled=User::where('username', $request->username)->get(['disabled']);
-    if ($checkifdisabled[0]->disabled == '0')
+    if (isset($checkifdisabled[0]) && ($checkifdisabled[0]->disabled == '0'))
     {
       return redirect()->back()->with('error', 'Your account has been disabled by the administrator');
     }
