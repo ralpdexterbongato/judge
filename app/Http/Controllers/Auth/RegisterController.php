@@ -26,7 +26,7 @@ class RegisterController extends Controller
       ]);
 
       $userTbl= new User;
-      $userTbl->name = $request->fullname;
+      $userTbl->name = $request->name;
       $userTbl->username = $request->username;
       $userTbl->password = bcrypt($request->password);
       $userTbl->role = $request->role;
