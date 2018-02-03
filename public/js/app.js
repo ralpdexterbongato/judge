@@ -1194,6 +1194,7 @@ Vue.component('eventcreate', __webpack_require__(52));
 Vue.component('eventindex', __webpack_require__(59));
 Vue.component('ratingcreate', __webpack_require__(62));
 Vue.component('accountindex', __webpack_require__(65));
+Vue.component('createactivity', __webpack_require__(70));
 var app = new Vue({
   el: '#app'
 });
@@ -45946,7 +45947,7 @@ exports = module.exports = __webpack_require__(11)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -46243,6 +46244,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -46350,7 +46353,6 @@ var render = function() {
               expression: "titleEvent"
             }
           ],
-          staticClass: "validate",
           attrs: { id: "EventName", type: "text" },
           domProps: { value: _vm.titleEvent },
           on: {
@@ -46430,33 +46432,34 @@ var render = function() {
         })
       ),
       _vm._v(" "),
-      _c("div", { staticClass: "input-field col s6" }, [
-        _c("i", { staticClass: "material-icons prefix" }, [_vm._v("add")]),
-        _vm._v(" "),
-        _c("input", {
-          directives: [
-            {
-              name: "model",
-              rawName: "v-model",
-              value: _vm.CriteriaNew,
-              expression: "CriteriaNew"
-            }
-          ],
-          staticClass: "validate",
-          attrs: { id: "add_cri", type: "text" },
-          domProps: { value: _vm.CriteriaNew },
-          on: {
-            input: function($event) {
-              if ($event.target.composing) {
-                return
+      _c("div", { staticClass: "criteria-form-container" }, [
+        _c("div", { staticClass: "input-field col s6" }, [
+          _c("i", { staticClass: "material-icons prefix" }, [_vm._v("add")]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.CriteriaNew,
+                expression: "CriteriaNew"
               }
-              _vm.CriteriaNew = $event.target.value
+            ],
+            attrs: { id: "add_cri", type: "text" },
+            domProps: { value: _vm.CriteriaNew },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.CriteriaNew = $event.target.value
+              }
             }
-          }
-        }),
-        _vm._v(" "),
-        _c("label", { staticClass: "active", attrs: { for: "add_cri" } }, [
-          _vm._v("Add criteria")
+          }),
+          _vm._v(" "),
+          _c("label", { staticClass: "active", attrs: { for: "add_cri" } }, [
+            _vm._v("Criteria")
+          ])
         ]),
         _vm._v(" "),
         _c(
@@ -48103,6 +48106,371 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 69 */,
+/* 70 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(71)
+/* template */
+var __vue_template__ = __webpack_require__(72)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\Setup\\createActivity.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {  return key !== "default" && key.substr(0, 2) !== "__"})) {  console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-e0545b3e", Component.options)
+  } else {
+    hotAPI.reload("data-v-e0545b3e", Component.options)
+' + '  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 71 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+  data: function data() {
+    return {
+      ActivityName: '',
+      CriteriaPercent: [],
+      total: 0
+    };
+  },
+
+  props: ['eventdata', 'judges', 'eventid'],
+  computed: {},
+  mounted: function mounted() {
+    this.addingDefault();
+  },
+
+  methods: {
+    addingDefault: function addingDefault() {
+      for (var i = 0; i < this.eventdata.criteria.length; i++) {
+        this.CriteriaPercent[i] = 0;
+      }
+    },
+    totalPercent: function totalPercent(key) {
+      if (isNaN(this.CriteriaPercent[key]) == false) {
+        var added = 0;
+        for (var i = 0; i < this.eventdata.criteria.length; i++) {
+          added = added + Number(this.CriteriaPercent[i]);
+        }
+        this.total = added;
+      }
+    },
+    submitAll: function submitAll() {
+      if (confirm('Confirm save?')) {
+        if (this.total != 100) {
+          console.log('error1');
+          return false;
+        }
+        for (var i = 0; i < this.eventdata.criteria.length; i++) {
+          if (isNaN(this.CriteriaPercent[i]) == true || this.CriteriaPercent[i] == null || this.CriteriaPercent[i] == 0 || this.CriteriaPercent[i] < 1 || this.CriteriaPercent[i] > 100) {
+            console.log('error2');
+            return false;
+          }
+        }
+
+        var vm = this;
+        axios.post('/setup-store', {
+          NameActivity: this.ActivityName,
+          judges: $('#selectedjudge').val(),
+          eventid: this.eventid.id,
+          percent: this.CriteriaPercent,
+          criterias: this.eventdata.criteria
+        }).then(function (response) {
+          swal('New', 'setup created!', 'success');
+          console.log(response);
+          window.location.href = window.location.href;
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }
+    }
+  }
+});
+
+/***/ }),
+/* 72 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "setup-form" }, [
+    _c(
+      "div",
+      {
+        staticClass:
+          "other-activity-form-top z-depth-1 blue darken-1 white-text text-darken-3"
+      },
+      [
+        _c("div", { staticClass: "input-field col s6" }, [
+          _c("i", { staticClass: "material-icons prefix" }, [
+            _vm._v("local_activity")
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.ActivityName,
+                expression: "ActivityName"
+              }
+            ],
+            staticClass: "white-text text-darken-3",
+            attrs: {
+              id: "icon_prefix",
+              name: "NameActivity",
+              placeholder: "...",
+              type: "text"
+            },
+            domProps: { value: _vm.ActivityName },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.ActivityName = $event.target.value
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c(
+            "label",
+            {
+              staticClass: "white-text text-darken-3",
+              attrs: { for: "icon_prefix" }
+            },
+            [_vm._v("Activity")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "input-field col s12" }, [
+          _c("i", { staticClass: "material-icons prefix" }, [_vm._v("title")]),
+          _vm._v(" "),
+          _c("input", {
+            staticClass: "white-text text-darken-3",
+            attrs: { disabled: "", id: "disabled", type: "text" },
+            domProps: { value: _vm.eventdata.title }
+          }),
+          _vm._v(" "),
+          _c(
+            "label",
+            {
+              staticClass: "white-text text-darken-3",
+              attrs: { for: "disabled" }
+            },
+            [_vm._v("Event type")]
+          )
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "input-field col s12" }, [
+          _c("i", { staticClass: "material-icons prefix" }, [_vm._v("person")]),
+          _vm._v(" "),
+          _c(
+            "select",
+            { attrs: { id: "selectedjudge", multiple: "" } },
+            [
+              _c(
+                "option",
+                { attrs: { value: "", disabled: "", selected: "" } },
+                [_vm._v("List")]
+              ),
+              _vm._v(" "),
+              _vm._l(_vm.judges, function(judge) {
+                return _c("option", { domProps: { value: judge.id } }, [
+                  _vm._v(_vm._s(judge.name))
+                ])
+              })
+            ],
+            2
+          ),
+          _vm._v(" "),
+          _c("label", { staticClass: "white-text text-darken-3" }, [
+            _vm._v("Select from judges")
+          ])
+        ])
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass:
+          "criteria-percentage-wrap z-depth-1 blue darken-1 white-text text-darken-3"
+      },
+      [
+        _c("div", { staticClass: "used-pecentage" }, [
+          _c("p", [_vm._v("Total")]),
+          _vm._v(" "),
+          _c(
+            "h5",
+            { class: [_vm.total == 100 ? "" : "red-text text-lighten-4"] },
+            [
+              _vm._v(_vm._s(_vm.total) + "%\n          "),
+              _vm.total == 100
+                ? _c("i", { staticClass: "material-icons white-text" }, [
+                    _vm._v("check")
+                  ])
+                : _c("i", { staticClass: "material-icons white-text" }, [
+                    _vm._v("close")
+                  ])
+            ]
+          )
+        ]),
+        _vm._v(" "),
+        _c("p"),
+        _vm._l(_vm.eventdata.criteria, function(criteria, key) {
+          return _c("div", { staticClass: "criteria-and-percent-container" }, [
+            _c("div", { staticClass: "input-field col s6" }, [
+              _c("i", { staticClass: "material-icons prefix" }, [_vm._v("%")]),
+              _vm._v(" "),
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.CriteriaPercent[key],
+                    expression: "CriteriaPercent[key]"
+                  }
+                ],
+                staticClass: "validate",
+                attrs: { placeholder: "", min: "1", type: "number" },
+                domProps: { value: _vm.CriteriaPercent[key] },
+                on: {
+                  keyup: function($event) {
+                    _vm.totalPercent(key)
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.CriteriaPercent, key, $event.target.value)
+                  }
+                }
+              }),
+              _vm._v(" "),
+              _c("label", { staticClass: "white-text text-darken-3" }, [
+                _vm._v(_vm._s(criteria.name))
+              ])
+            ])
+          ])
+        }),
+        _vm._v(" "),
+        _c("p")
+      ],
+      2
+    ),
+    _vm._v(" "),
+    _c(
+      "button",
+      {
+        staticClass: "btn waves-effect waves-light right",
+        attrs: { type: "submit", name: "action" },
+        on: {
+          click: function($event) {
+            _vm.submitAll()
+          }
+        }
+      },
+      [_vm._v("\n      Save\n    ")]
+    )
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-e0545b3e", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

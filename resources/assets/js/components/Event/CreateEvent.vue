@@ -3,7 +3,7 @@
     <div class="create-event-form">
       <div class="input-field col s6">
         <i class="material-icons prefix">title</i>
-        <input id="EventName" v-model="titleEvent" type="text" class="validate">
+        <input id="EventName" v-model="titleEvent" type="text" >
         <label for="EventName">Event Title</label>
       </div>
       <div class="criterias">
@@ -13,10 +13,12 @@
           <i class="material-icons" v-on:click="CriteriaRemove(criteria.id)">close</i>
         </p>
       </div>
-      <div class="input-field col s6">
-        <i class="material-icons prefix">add</i>
-        <input id="add_cri" v-model="CriteriaNew" type="text" class="validate">
-        <label class="active" for="add_cri">Add criteria</label>
+      <div class="criteria-form-container">
+        <div class="input-field col s6">
+          <i class="material-icons prefix">add</i>
+          <input id="add_cri" v-model="CriteriaNew" type="text" >
+          <label class="active" for="add_cri">Criteria</label>
+        </div>
         <button class="btn waves-effect waves-light right" v-on:click="saveCriteria()" type="submit" name="action">
           Add
         </button>
