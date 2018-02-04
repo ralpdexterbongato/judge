@@ -14,9 +14,16 @@ class Setup extends Model
     {
       return $this->belongsTo('App\Event');
     }
-
+    public function Contestants()
+    {
+      return $this->hasMany('App\ContestantSetup','setup_id');
+    }
     public function getCreatedAtAttribute($date)
     {
       return Carbon::createFromFormat('Y-m-d H:i:s', $date)->diffForHumans();
+    }
+    public function criterias()
+    {
+      return $this->belongsToMany('App\Criteria','criteria_setups','setup_id','criteria_id')->withPivot('percentjudging');
     }
 }

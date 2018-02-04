@@ -6,7 +6,7 @@
   <div class="results-container">
     <h5>Activity: {{$SetupData[0]->Name}}</h5>
     <h6>Event: {{$SetupData[0]->event->title}}</h6>
-    <h6>Total contestants: {{$SetupData[0]->NumberContestant}}</h6>
+    <h6>Total contestants: {{count($allContestants)}}</h6>
     @if (Session::has('SessionRank'))
     <div class="ranking-table-container">
       <table class="striped responsive-table">
@@ -25,8 +25,8 @@
             @else
               <th>{{$displayrank->place-1}} runner up</th>
             @endif
-            <td>{{$displayrank->contestant}}</td>
-            <td><span class="bold">{{number_format($displayrank->avg,2,'.',',')}}%</span></td>
+            <td>{{$displayrank->contestant[0]->name}}</td>
+            <td><span class="bold">{{number_format($displayrank->totalRate,2,'.',',')}}%</span></td>
           </tr>
           @endforeach
         </tbody>
@@ -36,7 +36,7 @@
       <table class="striped responsive-table">
         <thead>
           <tr>
-            <th>Contestant No.</th>
+            <th>Contestant</th>
             @foreach ($judges as $judge)
               <th>{{$judge->User->name}}</th>
             @endforeach
@@ -44,16 +44,16 @@
           </tr>
         </thead>
         <tbody>
-          @for ($i = 0; $i < $SetupData[0]->NumberContestant; $i++)
+          @foreach ($allContestants as $i => $contestant)
           <tr>
-            <td>{{$i+1}}</td>
+            <td>{{$contestant->name}}</td>
             @foreach ($judges as $key =>$judge)
-            <td>{{number_format($preAvg[$key][$i]->avg, 2, '.', ',')}} %</td>
+            <td>{{number_format($preAvg[$key][$i]->total, 2, '.', ',')}} %</td>
             @endforeach
-              <td class="bold">{{number_format($TotalAvg[$i]->avg, 2, '.', ',')}} %</td>
+              <td class="bold">{{number_format($TotalAvg[$i]->total/$numberOfJudges, 2, '.', ',')}} %</td>
             <td><span class="bold"></span></td>
           </tr>
-          @endfor
+          @endforeach
         </tbody>
       </table>
     </div>

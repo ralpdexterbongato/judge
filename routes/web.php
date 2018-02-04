@@ -42,7 +42,7 @@ Route::get('/rating-create','RatingController@create');
 Route::post('/rating-store','RatingController@store');
 Route::put('/rating-update/{setupId}','RatingController@update');
 Route::get('/rating-create-data','RatingController@createData');
-Route::get('/rating-get-data/{setupId}/{contestant}','RatingController@Contestant');
+Route::get('/rating-get-data/{setupId}','RatingController@Contestant');
 
 Route::get('/results-show/{setupId}','ResultsController@show')->middleware('IfNotReady');
 
@@ -54,3 +54,6 @@ Route::put('/account-update/{id}','AccountController@update');
 Route::put('/account-update-as-admin/{id}','AccountController@setAdminRole');
 Route::put('/account-update-as-judge/{id}','AccountController@setJudgeRole');
 Route::put('/account-update-enable-toggle/{id}','AccountController@toggleEnable');
+
+Route::post('/contestant-add/{setupid}','ContestantController@store');
+Route::delete('/contestant-remove/{contestantid}','ContestantController@delete');

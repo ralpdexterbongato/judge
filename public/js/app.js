@@ -375,12 +375,6 @@ module.exports = {
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(19);
-
-/***/ }),
-/* 2 */
 /***/ (function(module, exports) {
 
 /* globals __VUE_SSR_CONTEXT__ */
@@ -487,6 +481,12 @@ module.exports = function normalizeComponent (
   }
 }
 
+
+/***/ }),
+/* 2 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports = __webpack_require__(19);
 
 /***/ }),
 /* 3 */
@@ -1160,7 +1160,7 @@ function toComment(sourceMap) {
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(13);
-module.exports = __webpack_require__(68);
+module.exports = __webpack_require__(71);
 
 
 /***/ }),
@@ -1194,7 +1194,7 @@ Vue.component('eventcreate', __webpack_require__(52));
 Vue.component('eventindex', __webpack_require__(59));
 Vue.component('ratingcreate', __webpack_require__(62));
 Vue.component('accountindex', __webpack_require__(65));
-Vue.component('createactivity', __webpack_require__(70));
+Vue.component('createactivity', __webpack_require__(68));
 var app = new Vue({
   el: '#app'
 });
@@ -1224,7 +1224,7 @@ try {
  * CSRF token as a header based on the value of the "XSRF" token cookie.
  */
 
-window.axios = __webpack_require__(1);
+window.axios = __webpack_require__(2);
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -45320,7 +45320,7 @@ module.exports = function (css) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(47)
 /* template */
@@ -45440,7 +45440,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(50)
 /* template */
@@ -45489,8 +45489,37 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -45544,7 +45573,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     return {
       IndexData: [],
       pagination: [],
-      offset: 4
+      offset: 4,
+      image: '',
+      name: '',
+      currentSelectedSetup: null
     };
   },
 
@@ -45621,6 +45653,46 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           });
         }
       });
+    },
+    onFileChange: function onFileChange(e) {
+      var files = e.target.files || e.dataTransfer.files;
+      if (!files.length) return;
+      this.createImage(files[0]);
+    },
+    createImage: function createImage(file) {
+      var image = new Image();
+      var reader = new FileReader();
+      var vm = this;
+
+      reader.onload = function (e) {
+        vm.image = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    },
+    submitContestant: function submitContestant() {
+      var vm = this;
+      __WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/contestant-add/' + vm.currentSelectedSetup, {
+        name: this.name,
+        image: this.image
+      }).then(function (response) {
+        console.log(response);
+        swal('Contestant', 'Added sucessfully', 'success');
+        vm.FetchData();
+      }).then(function (error) {
+        console.log(error);
+      });
+    },
+    deleteContestant: function deleteContestant(id) {
+      if (confirm('confirm remove?')) {
+        var vm = this;
+        __WEBPACK_IMPORTED_MODULE_0_axios___default.a.delete('/contestant-remove/' + id).then(function (response) {
+          console.log(response);
+          swal('Removed', 'removed sucessfully', 'success');
+          vm.FetchData();
+        }).catch(function (error) {
+          console.log(error);
+        });
+      }
     }
   },
   created: function created() {
@@ -45661,7 +45733,7 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", {}, [
+  return _c("div", { staticClass: "activity-index-wrap" }, [
     _c(
       "div",
       { staticClass: "activities-setup-container" },
@@ -45680,20 +45752,65 @@ var render = function() {
                   _c("td", [_vm._v(_vm._s(data.event.title))])
                 ]),
                 _vm._v(" "),
-                _c("tr", [
-                  _c("th", [_vm._v("Contestants:")]),
-                  _vm._v(" "),
-                  _c("td", [_vm._v(_vm._s(data.NumberContestant))])
-                ]),
-                _vm._v(" "),
                 _vm._m(0, true),
                 _vm._v(" "),
-                _c(
-                  "tr",
-                  _vm._l(data.judges, function(judge) {
-                    return _c("td", [_vm._v(_vm._s(judge.name))])
-                  })
-                )
+                _c("tr", [
+                  _c("th"),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    { staticClass: "contestant-prev-container" },
+                    _vm._l(data.contestants, function(contestant) {
+                      return _c("div", { staticClass: "chip" }, [
+                        contestant.picture != ""
+                          ? _c("img", {
+                              attrs: {
+                                src: "storage/images/" + contestant.picture,
+                                alt: "Person"
+                              }
+                            })
+                          : _vm._e(),
+                        _vm._v(
+                          "\r\n                  " +
+                            _vm._s(contestant.name) +
+                            "\r\n                  "
+                        ),
+                        _c(
+                          "i",
+                          {
+                            staticClass: "remove-contestant material-icons",
+                            on: {
+                              click: function($event) {
+                                _vm.deleteContestant(contestant.id)
+                              }
+                            }
+                          },
+                          [_vm._v("close")]
+                        )
+                      ])
+                    })
+                  )
+                ]),
+                _vm._v(" "),
+                _vm._m(1, true),
+                _vm._v(" "),
+                _c("tr", [
+                  _c("th"),
+                  _vm._v(" "),
+                  _c(
+                    "td",
+                    { staticClass: "judges-prev-container" },
+                    _vm._l(data.judges, function(judge) {
+                      return _c("div", { staticClass: "chip" }, [
+                        _vm._v(
+                          "\r\n                  " +
+                            _vm._s(judge.name) +
+                            "\r\n                "
+                        )
+                      ])
+                    })
+                  )
+                ])
               ])
             ]),
             _vm._v(" "),
@@ -45751,6 +45868,7 @@ var render = function() {
                       attrs: { href: "#" },
                       on: {
                         click: function($event) {
+                          $event.preventDefault()
                           _vm.Delete(data.id)
                         }
                       }
@@ -45758,6 +45876,28 @@ var render = function() {
                     [
                       _c("i", { staticClass: "material-icons white-text" }, [
                         _vm._v("delete")
+                      ])
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "a",
+                    {
+                      staticClass: "btn btn-floating",
+                      attrs: {
+                        href: "#",
+                        onclick: "$('#contestantmodal').modal('open');"
+                      },
+                      on: {
+                        click: function($event) {
+                          $event.preventDefault()
+                          _vm.currentSelectedSetup = data.id
+                        }
+                      }
+                    },
+                    [
+                      _c("i", { staticClass: "material-icons white-text" }, [
+                        _vm._v("person_add")
                       ])
                     ]
                   )
@@ -45840,10 +45980,82 @@ var render = function() {
           : _vm._e()
       ],
       2
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal modal-fixed-footer",
+        attrs: { id: "contestantmodal" }
+      },
+      [
+        _c("div", { staticClass: "modal-content" }, [
+          _c("h5", [_vm._v("Add Contestant")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "input-field col s6" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.name,
+                  expression: "name"
+                }
+              ],
+              attrs: { id: "name", type: "text" },
+              domProps: { value: _vm.name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.name = $event.target.value
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("label", { attrs: { for: "name" } }, [_vm._v("Name/Group")])
+          ]),
+          _vm._v(" "),
+          _c("input", {
+            attrs: { type: "file" },
+            on: { change: _vm.onFileChange }
+          }),
+          _vm._v(" "),
+          _c("img", {
+            staticClass: "prev-image",
+            attrs: { src: _vm.image, alt: "" }
+          })
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "modal-footer" }, [
+          _c(
+            "a",
+            {
+              staticClass:
+                "modal-action modal-close waves-effect waves-green btn-flat ",
+              attrs: { href: "#" },
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  _vm.submitContestant()
+                }
+              }
+            },
+            [_vm._v("Add")]
+          )
+        ])
+      ]
     )
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [_c("th", [_vm._v("Contestants:")])])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -45869,7 +46081,7 @@ function injectStyle (ssrContext) {
   if (disposed) return
   __webpack_require__(53)
 }
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(57)
 /* template */
@@ -46212,7 +46424,7 @@ module.exports = function listToStyles (parentId, list) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
 //
 //
@@ -46508,7 +46720,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(60)
 /* template */
@@ -46557,7 +46769,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
 //
 //
@@ -46876,7 +47088,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(63)
 /* template */
@@ -46925,8 +47137,25 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -46992,13 +47221,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       Activity: [],
       EventCrit: [],
       Rates: [],
-      CurrentContestant: 1,
+      currentContestantPage: 1,
+      contestantLastPage: 1,
       contestantData: [],
       updateRates: [],
-      Average: 0,
+      TotalRates: 0,
       minimum: 75,
       Loading: false,
-      Absent: ''
+      Absent: '',
+      theEvent: [],
+      TotalRateUpdate: 0
     };
   },
 
@@ -47010,21 +47242,31 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         console.log(response);
 
         if (response.data.activity == null) {
-          swal('Oops...', 'No Activity event is set for you!', 'error');
+          if (response.data.error != null) {
+            swal('Oops...', response.data.error, 'error');
+          } else {
+            swal('Oops...', 'No Activity event is set for you!', 'error');
+          }
         } else {
-          vm.Activity = response.data.activity[0];
+          vm.Activity = response.data.activity;
           vm.EventCrit = response.data.eventCriteria;
-          vm.getcontestant();
+          vm.theEvent = response.data.event[0];
+          vm.getcontestant(vm.currentContestantPage);
         }
       });
     },
     save: function save() {
+      for (var i = 0; i < this.EventCrit.length; i++) {
+        if ((this.Rates[i] > this.EventCrit[i].pivot.percentjudging || this.Rates[i] < 1 || this.Rates[i] == null || this.Rates[i] == '' || isNaN(this.Rates[i]) == true) && this.Absent != '0') {
+          return false;
+        }
+      }
       var vm = this;
       __WEBPACK_IMPORTED_MODULE_0_axios___default.a.post('/rating-store', {
         setUp: this.Activity.id,
-        Crit: this.EventCrit.criteria,
+        Crit: this.EventCrit,
         Rates: this.Rates,
-        Contestant: this.CurrentContestant,
+        Contestant: this.contestantData.id,
         Absent: this.Absent
       }).then(function (response) {
         if (response.data.error != null) {
@@ -47034,32 +47276,38 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           console.log(response);
           vm.Rates = [];
           vm.Absent = '';
-          vm.getcontestant();
+          vm.getcontestant(vm.currentContestantPage);
         }
       }, function (error) {
         console.log(error);
         swal('Ooops!', error.response.data.message, 'error');
       });
     },
-    getcontestant: function getcontestant() {
+    getcontestant: function getcontestant(page) {
       this.Loading = true;
       var vm = this;
-      __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/rating-get-data/' + this.Activity.id + '/' + this.CurrentContestant).then(function (response) {
+      __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/rating-get-data/' + this.Activity.id + '?page=' + page).then(function (response) {
         console.log(response);
-        vm.contestantData = response.data.ratings;
-        vm.Average = response.data.average;
+        vm.contestantData = response.data.data[0];
+        vm.currentContestantPage = response.data.current_page;
+        vm.contestantLastPage = response.data.last_page;
+        for (var i = 0; i < vm.EventCrit.length; i++) {
+          vm.Rates[i] = 0;
+          if (response.data.data[0].ratings != '') {
+            vm.updateRates[i] = response.data.data[0].ratings[i].rate;
+          }
+        }
         vm.Loading = false;
+        vm.AddUpdatableRates();
       });
     },
     nextBtn: function nextBtn() {
       var _this = this;
 
-      if (this.Activity.NumberContestant == this.CurrentContestant) {
-        return false;
-      } else if (this.contestantData == null) {
+      if (this.contestantData.ratings == '') {
         swal({
-          title: 'Why?',
-          text: "This contestant is absent?",
+          title: 'Confirm pass?',
+          text: "this contestant will be automatically rated zero",
           type: 'question',
           showCancelButton: true,
           confirmButtonColor: '#3085d6',
@@ -47067,49 +47315,45 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           confirmButtonText: 'Yes, proceed'
         }).then(function (result) {
           if (result.value) {
-            _this.updateRates = [];
-            _this.Rates = [];
             _this.Absent = '0';
             _this.save();
-            _this.CurrentContestant++;
-            _this.getcontestant();
           }
         });
       } else {
-        this.updateRates = [];
-        this.Rates = [];
-        this.CurrentContestant++;
-        this.getcontestant();
+        if (this.currentContestantPage < this.contestantLastPage) {
+          var nextpages = this.currentContestantPage + 1;
+          this.getcontestant(nextpages);
+        }
       }
     },
     backBtn: function backBtn() {
-      if (1 == this.CurrentContestant) {
-        return false;
-      } else {
-        this.updateRates = [];
-        this.Rates = [];
-        this.CurrentContestant--;
-        this.getcontestant();
+      if (this.currentContestantPage > 1) {
+        this.getcontestant(this.currentContestantPage - 1);
       }
     },
     update: function update() {
+      for (var i = 0; i < this.EventCrit.length; i++) {
+        if (this.updateRates[i] > this.EventCrit[i].pivot.percentjudging || this.updateRates[i] < 1 || this.updateRates[i] == null || this.updateRates[i] == '' || isNaN(this.updateRates[i]) == true) {
+          return false;
+        }
+      }
       var vm = this;
       __WEBPACK_IMPORTED_MODULE_0_axios___default.a.put('/rating-update/' + this.Activity.id, {
-        Contestant: this.CurrentContestant,
+        Contestant: this.contestantData.id,
         UpdateRates: this.updateRates,
-        Criterias: this.EventCrit.criteria
+        Criterias: this.EventCrit
       }).then(function (response) {
         if (response.data.error != null) {
           vm.updateRates = [];
           vm.Rates = [];
           swal('Oops...', response.data.error, 'error');
-          vm.getcontestant();
+          vm.getcontestant(vm.currentContestantPage);
         } else {
           vm.updateRates = [];
           vm.Rates = [];
           swal('Updated!', 'Updated successfully!', 'success');
           console.log(response);
-          vm.getcontestant();
+          vm.getcontestant(vm.currentContestantPage);
         }
       });
     },
@@ -47133,9 +47377,27 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           _this2.getcontestant();
         }
       });
+    },
+    addCriteriaRatings: function addCriteriaRatings() {
+      var totalval = 0;
+      for (var i = 0; i < this.EventCrit.length; i++) {
+        totalval = totalval + Number(this.Rates[i]);
+      }
+      this.TotalRates = totalval;
+    },
+    AddUpdatableRates: function AddUpdatableRates() {
+      var totalval = 0;
+      for (var i = 0; i < 5; i++) {
+        if (isNaN(this.updateRates[i]) == false) {
+          totalval = totalval + Number(this.updateRates[i]);
+        } else {
+          totalval = totalval + Number(0);
+        }
+      }
+      this.TotalRateUpdate = totalval;
     }
   },
-  created: function created() {
+  mounted: function mounted() {
     this.fetchData();
   }
 });
@@ -47153,44 +47415,52 @@ var render = function() {
       ? _c("div", { staticClass: "found-container" }, [
           _c("h5", [_vm._v("ACTIVITY: " + _vm._s(_vm.Activity.Name))]),
           _vm._v(" "),
-          _c("h6", [_vm._v("EVENT: " + _vm._s(_vm.EventCrit.title))]),
+          _c("h6", [_vm._v("EVENT: " + _vm._s(_vm.theEvent.title))]),
           _vm._v(" "),
           _c("div", { staticClass: "rating-navs" }, [
-            _c(
-              "a",
-              {
-                staticClass:
-                  "btn-floating btn-large waves-effect waves-light blue darken-1",
-                on: {
-                  click: function($event) {
-                    _vm.backBtn()
-                  }
-                }
-              },
-              [
-                _c("i", { staticClass: "material-icons" }, [
-                  _vm._v("arrow_back")
-                ])
-              ]
-            ),
+            _c("div", {}, [
+              _vm.currentContestantPage != 1
+                ? _c(
+                    "a",
+                    {
+                      staticClass:
+                        "btn-floating btn-large waves-effect waves-light blue darken-1",
+                      on: {
+                        click: function($event) {
+                          _vm.backBtn()
+                        }
+                      }
+                    },
+                    [
+                      _c("i", { staticClass: "material-icons" }, [
+                        _vm._v("arrow_back")
+                      ])
+                    ]
+                  )
+                : _vm._e()
+            ]),
             _vm._v(" "),
-            _c(
-              "a",
-              {
-                staticClass:
-                  "btn-floating btn-large waves-effect waves-light blue darken-1",
-                on: {
-                  click: function($event) {
-                    _vm.nextBtn()
-                  }
-                }
-              },
-              [
-                _c("i", { staticClass: "material-icons" }, [
-                  _vm._v("arrow_forward")
-                ])
-              ]
-            )
+            _c("div", {}, [
+              _vm.currentContestantPage != _vm.contestantLastPage
+                ? _c(
+                    "a",
+                    {
+                      staticClass:
+                        "btn-floating btn-large waves-effect waves-light blue darken-1",
+                      on: {
+                        click: function($event) {
+                          _vm.nextBtn()
+                        }
+                      }
+                    },
+                    [
+                      _c("i", { staticClass: "material-icons" }, [
+                        _vm._v("arrow_forward")
+                      ])
+                    ]
+                  )
+                : _vm._e()
+            ])
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "rating-table-container z-depth-1" }, [
@@ -47204,64 +47474,81 @@ var render = function() {
               _c("div", { staticClass: "rating-card-title" }, [
                 _vm._m(0),
                 _vm._v(" "),
-                _c("h5", { staticClass: "contestant-number" }, [
-                  _vm._v("Contestant No. " + _vm._s(_vm.CurrentContestant))
-                ])
+                _c(
+                  "h5",
+                  {
+                    staticClass: "contestant-number",
+                    attrs: { onclick: "$('#picture-prev-modal').modal('open')" }
+                  },
+                  [
+                    _c("span", { staticClass: "blue-text" }, [
+                      _vm._v(_vm._s(_vm.contestantData.name))
+                    ])
+                  ]
+                )
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "divider" }),
               _vm._v(" "),
-              _vm.contestantData != null
+              _vm.contestantData.ratings != ""
                 ? _c(
                     "table",
                     [
-                      _vm._l(_vm.EventCrit.criteria, function(criteria, loop) {
+                      _vm._l(_vm.EventCrit, function(criteria, loop) {
                         return _c("tr", [
                           _c("th", [_vm._v(_vm._s(criteria.name))]),
                           _vm._v(" "),
-                          _c("td", [
-                            _vm.contestantData[loop]
+                          _c("td", { staticClass: "relativetd" }, [
+                            _vm.contestantData.ratings != null
                               ? _c("input", {
                                   directives: [
                                     {
                                       name: "model",
                                       rawName: "v-model",
-                                      value: (_vm.updateRates[loop] =
-                                        _vm.contestantData[loop].rate),
-                                      expression:
-                                        "updateRates[loop] = contestantData[loop].rate"
+                                      value: _vm.updateRates[loop],
+                                      expression: "updateRates[loop]"
                                     }
                                   ],
-                                  attrs: { type: "number", step: "0.01" },
-                                  domProps: {
-                                    value: (_vm.updateRates[loop] =
-                                      _vm.contestantData[loop].rate)
+                                  staticClass: "validate",
+                                  attrs: {
+                                    min: "1",
+                                    max: criteria.pivot.percentjudging,
+                                    type: "number",
+                                    step: "1"
                                   },
+                                  domProps: { value: _vm.updateRates[loop] },
                                   on: {
                                     input: function($event) {
                                       if ($event.target.composing) {
                                         return
                                       }
                                       _vm.$set(
-                                        (_vm.updateRates[loop] =
-                                          _vm.contestantData[loop]),
-                                        "rate",
+                                        _vm.updateRates,
+                                        loop,
                                         $event.target.value
                                       )
                                     }
                                   }
                                 })
-                              : _vm._e()
+                              : _vm._e(),
+                            _vm._v(" "),
+                            _c("p", { staticClass: "max-rating" }, [
+                              _vm._v(
+                                "Max - " +
+                                  _vm._s(criteria.pivot.percentjudging) +
+                                  "%"
+                              )
+                            ])
                           ])
                         ])
                       }),
                       _vm._v(" "),
                       _c("tr", [
-                        _c("th", [_vm._v("Total avarage:")]),
+                        _c("th", [_vm._v("Total rating:")]),
                         _vm._v(" "),
                         _c("td", [
                           _c("h5", { staticClass: "right" }, [
-                            _vm._v(_vm._s(_vm.Average) + "%")
+                            _vm._v(_vm._s(_vm.TotalRateUpdate) + "%")
                           ])
                         ])
                       ]),
@@ -47291,11 +47578,11 @@ var render = function() {
                 : _c(
                     "table",
                     [
-                      _vm._l(_vm.EventCrit.criteria, function(criteria, index) {
+                      _vm._l(_vm.EventCrit, function(criteria, index) {
                         return _c("tr", [
                           _c("th", [_vm._v(_vm._s(criteria.name))]),
                           _vm._v(" "),
-                          _c("td", [
+                          _c("td", { staticClass: "relativetd" }, [
                             _c("input", {
                               directives: [
                                 {
@@ -47305,7 +47592,13 @@ var render = function() {
                                   expression: "Rates[index]"
                                 }
                               ],
-                              attrs: { type: "number", step: "0.01" },
+                              staticClass: "validate",
+                              attrs: {
+                                type: "number",
+                                step: "1",
+                                min: "1",
+                                max: criteria.pivot.percentjudging
+                              },
                               domProps: { value: _vm.Rates[index] },
                               on: {
                                 input: function($event) {
@@ -47319,12 +47612,27 @@ var render = function() {
                                   )
                                 }
                               }
-                            })
+                            }),
+                            _c("p", { staticClass: "max-rating" }, [
+                              _vm._v(
+                                "Max - " +
+                                  _vm._s(criteria.pivot.percentjudging) +
+                                  "%"
+                              )
+                            ])
                           ])
                         ])
                       }),
                       _vm._v(" "),
-                      _vm._m(1),
+                      _c("tr", [
+                        _c("th", [_vm._v("Total avarage:")]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("h5", { staticClass: "right" }, [
+                            _vm._v(_vm._s(_vm.TotalRates) + "%")
+                          ])
+                        ])
+                      ]),
                       _vm._v(" "),
                       _c("tr", [
                         _c("th", [
@@ -47370,7 +47678,26 @@ var render = function() {
             ])
           ])
         ])
-      : _c("div", { staticClass: "not-found" }, [_vm._m(2)])
+      : _c("div", { staticClass: "not-found" }, [_vm._m(1)]),
+    _vm._v(" "),
+    _c("div", { staticClass: "modal", attrs: { id: "picture-prev-modal" } }, [
+      _c("div", { staticClass: "modal-content" }, [
+        _c("h5", [
+          _vm._v("Contestant no. " + _vm._s(_vm.currentContestantPage))
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "image-wrapper" }, [
+          _vm.contestantData.picture != null
+            ? _c("img", {
+                attrs: {
+                  src: "/storage/images/" + _vm.contestantData.picture,
+                  alt: ""
+                }
+              })
+            : _vm._e()
+        ])
+      ])
+    ])
   ])
 }
 var staticRenderFns = [
@@ -47383,16 +47710,6 @@ var staticRenderFns = [
         _vm._v("format_list_numbered")
       ]),
       _vm._v(" Scoring card")
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("tr", [
-      _c("th", [_vm._v("Total avarage:")]),
-      _vm._v(" "),
-      _c("td", [_c("h5", { staticClass: "right" }, [_vm._v("0%")])])
     ])
   },
   function() {
@@ -47419,7 +47736,7 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
 var __vue_script__ = __webpack_require__(66)
 /* template */
@@ -47468,7 +47785,7 @@ module.exports = Component.exports
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios__ = __webpack_require__(2);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_axios___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_axios__);
 //
 //
@@ -48103,21 +48420,14 @@ if (false) {
 
 /***/ }),
 /* 68 */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-/* 69 */,
-/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var disposed = false
-var normalizeComponent = __webpack_require__(2)
+var normalizeComponent = __webpack_require__(1)
 /* script */
-var __vue_script__ = __webpack_require__(71)
+var __vue_script__ = __webpack_require__(69)
 /* template */
-var __vue_template__ = __webpack_require__(72)
+var __vue_template__ = __webpack_require__(70)
 /* template functional */
 var __vue_template_functional__ = false
 /* styles */
@@ -48157,7 +48467,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 71 */
+/* 69 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -48273,7 +48583,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 });
 
 /***/ }),
-/* 72 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var render = function() {
@@ -48471,6 +48781,12 @@ if (false) {
     require("vue-hot-reload-api")      .rerender("data-v-e0545b3e", module.exports)
   }
 }
+
+/***/ }),
+/* 71 */
+/***/ (function(module, exports) {
+
+// removed by extract-text-webpack-plugin
 
 /***/ })
 /******/ ]);

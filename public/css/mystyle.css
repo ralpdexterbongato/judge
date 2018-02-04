@@ -210,6 +210,19 @@ nav
   overflow-y: auto;
   padding:10px!important;
 }
+.card-content::-webkit-scrollbar {
+    width:10px;
+}
+
+.card-content::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+}
+
+.card-content::-webkit-scrollbar-thumb {
+  background-color:#d2d2d2;
+  outline: 1px solid slategrey;
+	border-radius: 5px;
+}
 
 /*setup*/
 .setup-form
@@ -226,12 +239,39 @@ nav
 
 
 /*setup index*/
+.activity-index-wrap .modal
+{
+  max-width: 400px!important;
+}
 .activities-setup-container
 {
   display: flex;
   padding:50px 20px;
   flex-wrap: wrap;
   justify-content: space-around;
+}
+.contestant-prev-container,.judges-prev-container
+{
+  display: flex;
+  flex-direction: column;
+}
+.contestant-pic-preview
+{
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+}
+.remove-contestant
+{
+  cursor: pointer;
+    float: right;
+    font-size: 16px;
+    line-height: 32px;
+    padding-left: 8px;
+}
+.prev-image
+{
+  width: 100%;
 }
 .activities-box
 {
@@ -250,7 +290,7 @@ nav
 }
 .activities-box .card-content
 {
-  max-width: 410px;
+  max-width: 420px;
   height:320px;
 }
 .setup-actions
@@ -278,6 +318,18 @@ nav
   min-height: 100vh;
   padding:50px 100px;
   display: flex;
+}
+.relativetd
+{
+  position: relative;
+  display: flex;
+}
+.max-rating
+{
+  font-size: 13px;
+  position: absolute;
+  top: 50px;
+  right: 0;
 }
 .event-title-text
 {
@@ -333,11 +385,22 @@ nav
   display: flex;
   justify-content: space-between;
   margin-top: 90px;
+  background-image: url();
 }
 .rating-card-title h5,.rating-card-title h6
 {
   font-size: 18px;
 }
+#picture-prev-modal img
+{
+  margin:0 auto;
+}
+.image-wrapper
+{
+  display: flex;
+  justify-content: center;
+}
+
 @media(max-width:640px)
 {
   .Rating-Create-Container

@@ -64,7 +64,7 @@ class SetupController extends Controller
   }
   public function indexData()
   {
-    return Setup::with('Judges','Event')->orderBy('id','DESC')->paginate(9);
+    return Setup::with('Judges','Event','Contestants')->orderBy('id','DESC')->paginate(9);
   }
   public function delete($id)
   {

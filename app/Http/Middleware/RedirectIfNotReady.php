@@ -7,6 +7,7 @@ use App\Setup;
 use App\JudgesSetup;
 use App\CriteriaEvent;
 use App\Rating;
+use App\ContestantSetup;
 class RedirectIfNotReady
 {
     /**
@@ -18,12 +19,13 @@ class RedirectIfNotReady
      */
     public function handle($request, Closure $next)
     {
-        $SetupData= Setup::where('id', $request->route()->setupId)->get(['NumberContestant','event_id']);
+        $SetupData= Setup::where('id', $request->route()->setupId)->get(['event_id']);
+        $totalContestant = ContestantSetup::where('setup_id',$request->route()->setupId)->count();
         $eventTotalCriteria=CriteriaEvent::where('event_id',$SetupData[0]->event_id)->count();
         $totalJudges=JudgesSetup::where('setup_id', $request->route()->setupId)->count();
         $totalRating=Rating::where('setup_id', $request->route()->setupId)->count();
 
-        $answer=$SetupData[0]->NumberContestant * $eventTotalCriteria;
+        $answer=$totalContestant * $eventTotalCriteria;
         $expectedTotalRating= $answer * $totalJudges;
         if ($totalRating==$expectedTotalRating)
         {

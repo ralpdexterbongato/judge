@@ -1,5 +1,5 @@
 <template lang="html">
-<div class="">
+<div class="activity-index-wrap">
   <div class="activities-setup-container">
     <div class="activities-box" v-for="data in IndexData">
       <div class="card blue darken-1">
@@ -12,13 +12,27 @@
             </tr>
             <tr>
               <th>Contestants:</th>
-              <td>{{data.NumberContestant}}</td>
+            </tr>
+            <tr>
+              <th></th>
+              <td class="contestant-prev-container">
+                <div class="chip" v-for="contestant in data.contestants">
+                  <img v-if="contestant.picture!=''" :src="'storage/images/'+contestant.picture" alt="Person">
+                  {{contestant.name}}
+                  <i class="remove-contestant material-icons" v-on:click="deleteContestant(contestant.id)">close</i>
+                </div>
+              </td>
             </tr>
             <tr>
               <th>Judges:</th>
             </tr>
             <tr>
-              <td v-for="judge in data.judges">{{judge.name}}</td>
+              <th></th>
+              <td class="judges-prev-container">
+                <div class="chip" v-for="judge in data.judges">
+                  {{judge.name}}
+                </div>
+              </td>
             </tr>
           </table>
         </div>
@@ -29,7 +43,8 @@
             <a href="#" v-else class="green-text" v-on:click.prevent="updateDisable(data.id)">Enabled</a>
             <div class="">
               <a :href="'/results-show/'+data.id" class="btn btn-floating"><i class="material-icons white-text">remove_red_eye</i></a>
-              <a href="#" class="btn btn-floating" v-on:click="Delete(data.id)"><i class="material-icons white-text">delete</i></a>
+              <a href="#" class="btn btn-floating" v-on:click.prevent="Delete(data.id)"><i class="material-icons white-text">delete</i></a>
+              <a href="#" class="btn btn-floating" v-on:click.prevent="currentSelectedSetup = data.id" onclick="$('#contestantmodal').modal('open');" ><i class="material-icons white-text">person_add</i></a>
             </div>
           </div>
         </div>
@@ -41,6 +56,20 @@
       <li v-for="page in pagesNumber" v-bind:class="[ page == isActive ? 'active blue':'']"><a href="#!" @click.prevent="changepage(page)">{{page}}</a></li>
       <li class="waves-effect" v-if="pagination.current_page < pagination.last_page"><a href="#!" @click.prevent="changepage(pagination.current_page + 1)"><i class="material-icons">chevron_right</i></a></li>
   </ul>
+  <div id="contestantmodal" class="modal modal-fixed-footer">
+   <div class="modal-content">
+     <h5>Add Contestant</h5>
+     <div class="input-field col s6">
+        <input id="name" v-model="name" type="text">
+        <label for="name">Name/Group</label>
+     </div>
+      <input type="file" @change="onFileChange">
+      <img class="prev-image" :src="image" alt="">
+   </div>
+   <div class="modal-footer">
+     <a href="#" v-on:click.prevent="submitContestant()" class="modal-action modal-close waves-effect waves-green btn-flat ">Add</a>
+   </div>
+ </div>
 </div>
 </template>
 
@@ -50,7 +79,10 @@ import axios from 'axios';
     data () { return {
       IndexData:[],
       pagination:[],
-      offset:4
+      offset:4,
+      image:'',
+      name:'',
+      currentSelectedSetup:null,
       }
     },
     // props: [],
@@ -147,6 +179,62 @@ import axios from 'axios';
             }
           })
       },
+      onFileChange(e) {
+          var files = e.target.files || e.dataTransfer.files;
+          if (!files.length)
+            return;
+          this.createImage(files[0]);
+        },
+        createImage(file) {
+          var image = new Image();
+          var reader = new FileReader();
+          var vm = this;
+
+          reader.onload = (e) => {
+            vm.image = e.target.result;
+          };
+          reader.readAsDataURL(file);
+        },
+        submitContestant()
+        {
+          var vm=this;
+          axios.post(`/contestant-add/`+vm.currentSelectedSetup,{
+            name:this.name,
+            image:this.image
+          }).then(function(response)
+          {
+            console.log(response);
+            swal(
+              'Contestant',
+              'Added sucessfully',
+              'success'
+            );
+            vm.FetchData();
+          }).then(function(error)
+          {
+            console.log(error);
+          });
+        },
+        deleteContestant(id)
+        {
+          if (confirm('confirm remove?'))
+          {
+            var vm = this;
+            axios.delete(`/contestant-remove/`+id).then(function(response)
+            {
+              console.log(response);
+              swal(
+                'Removed',
+                'removed sucessfully',
+                'success'
+              );
+              vm.FetchData();
+            }).catch(function(error)
+            {
+              console.log(error);
+            });
+          }
+        }
     },
     created () {
       this.FetchData();

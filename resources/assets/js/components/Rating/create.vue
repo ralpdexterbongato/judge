@@ -2,10 +2,14 @@
 <div class="Rating-Create-Container">
   <div class="found-container" v-if="Activity.Name!=null">
     <h5>ACTIVITY: {{Activity.Name}}</h5>
-    <h6>EVENT: {{EventCrit.title}}</h6>
+    <h6>EVENT: {{theEvent.title}}</h6>
     <div class="rating-navs">
-      <a class="btn-floating btn-large waves-effect waves-light blue darken-1" v-on:click="backBtn()"><i class="material-icons">arrow_back</i></a>
-      <a class="btn-floating btn-large waves-effect waves-light blue darken-1" v-on:click="nextBtn()"><i class="material-icons">arrow_forward</i></a>
+      <div class="">
+        <a class="btn-floating btn-large waves-effect waves-light blue darken-1" v-if="currentContestantPage!=1" v-on:click="backBtn()"><i class="material-icons">arrow_back</i></a>
+      </div>
+      <div class="">
+        <a class="btn-floating btn-large waves-effect waves-light blue darken-1" v-if="currentContestantPage!= contestantLastPage " v-on:click="nextBtn()"><i class="material-icons">arrow_forward</i></a>
+      </div>
     </div>
     <div class="rating-table-container z-depth-1">
       <div class="progress" v-if="Loading">
@@ -14,18 +18,23 @@
       <div class="rating-table-padding">
         <div class="rating-card-title">
           <h6><i class="material-icons">format_list_numbered</i> Scoring card</h6>
-          <h5 class="contestant-number">Contestant No. {{CurrentContestant}}</h5>
+          <h5 class="contestant-number" onclick="$('#picture-prev-modal').modal('open')"><span class="blue-text">{{contestantData.name}}</span>
+          </h5>
         </div>
         <div class="divider">
         </div>
-        <table v-if="contestantData!=null">
-          <tr v-for="(criteria,loop) in EventCrit.criteria">
+        <table v-if="contestantData.ratings!=''">
+          <tr v-for="(criteria,loop) in EventCrit">
             <th>{{criteria.name}}</th>
-            <td><input v-if="contestantData[loop]" type="number"step="0.01" v-model="updateRates[loop] = contestantData[loop].rate"></td>
+            <td class="relativetd">
+              <input min="1" v-if="contestantData.ratings!=null" :max="criteria.pivot.percentjudging" class="validate" type="number"step="1" v-model="updateRates[loop]">
+
+              <p class="max-rating">Max - {{criteria.pivot.percentjudging}}%</p>
+            </td>
           </tr>
           <tr>
-            <th>Total avarage:</th>
-            <td><h5 class="right">{{Average}}%</h5></td>
+            <th>Total rating:</th>
+            <td><h5 class="right">{{TotalRateUpdate}}%</h5></td>
           </tr>
           <tr>
             <th></th>
@@ -33,13 +42,13 @@
           </tr>
         </table>
         <table v-else>
-          <tr v-for="(criteria,index) in EventCrit.criteria">
+          <tr v-for="(criteria,index) in EventCrit">
             <th>{{criteria.name}}</th>
-            <td><input type="number"step="0.01" v-model="Rates[index]"></td>
+            <td class="relativetd"><input class="validate" type="number"step="1" min="1" :max="criteria.pivot.percentjudging" v-model="Rates[index]"><p class="max-rating">Max - {{criteria.pivot.percentjudging}}%</p></td>
           </tr>
           <tr>
             <th>Total avarage:</th>
-            <td><h5 class="right">0%</h5></td>
+            <td><h5 class="right">{{TotalRates}}%</h5></td>
           </tr>
           <tr>
             <th><a href="#" class="btn btn-floating red" v-on:click.prevent="ContestantAbsent()"><i class="material-icons">close</i></a></th>
@@ -52,6 +61,14 @@
   <div v-else class="not-found">
     <h5 class="grey-text"><i class="material-icons">close</i> No Activity event found</h5>
   </div>
+  <div id="picture-prev-modal" class="modal">
+    <div class="modal-content">
+      <h5>Contestant no. {{currentContestantPage}}</h5>
+      <div class="image-wrapper">
+        <img v-if="contestantData.picture!=null" :src="'/storage/images/'+contestantData.picture" alt="">
+      </div>
+    </div>
+  </div>
 </div>
 </template>
 
@@ -62,13 +79,16 @@ import axios from 'axios';
       Activity:[],
       EventCrit:[],
       Rates:[],
-      CurrentContestant:1,
+      currentContestantPage:1,
+      contestantLastPage:1,
       contestantData:[],
       updateRates:[],
-      Average:0,
+      TotalRates:0,
       minimum:75,
       Loading:false,
-      Absent:''
+      Absent:'',
+      theEvent:[],
+      TotalRateUpdate:0
       }
     },
     props: [],
@@ -82,27 +102,45 @@ import axios from 'axios';
 
           if (response.data.activity==null)
           {
-            swal(
-              'Oops...',
-              'No Activity event is set for you!',
-              'error'
-            )
+            if (response.data.error!=null)
+            {
+              swal(
+                'Oops...',
+                response.data.error,
+                'error'
+              )
+            }else
+            {
+              swal(
+                'Oops...',
+                'No Activity event is set for you!',
+                'error'
+              )
+            }
           }else
           {
-            vm.Activity=response.data.activity[0];
+            vm.Activity=response.data.activity;
             vm.EventCrit=response.data.eventCriteria;
-            vm.getcontestant();
+            vm.theEvent = response.data.event[0];
+            vm.getcontestant(vm.currentContestantPage);
           }
         });
       },
       save()
       {
+        for (var i = 0; i < this.EventCrit.length; i++)
+        {
+          if (((this.Rates[i] > this.EventCrit[i].pivot.percentjudging) || (this.Rates[i] < 1) || (this.Rates[i]==null) || (this.Rates[i]=='') || (isNaN(this.Rates[i])==true))&&(this.Absent!='0'))
+          {
+            return false;
+          }
+        }
         var vm=this;
         axios.post(`/rating-store`,{
           setUp:this.Activity.id,
-          Crit:this.EventCrit.criteria,
+          Crit:this.EventCrit,
           Rates:this.Rates,
-          Contestant:this.CurrentContestant,
+          Contestant:this.contestantData.id,
           Absent:this.Absent
         }).then(function(response)
         {
@@ -123,7 +161,7 @@ import axios from 'axios';
             console.log(response);
             vm.Rates=[];
             vm.Absent='';
-            vm.getcontestant();
+            vm.getcontestant(vm.currentContestantPage);
           }
         },function(error)
         {
@@ -135,28 +173,35 @@ import axios from 'axios';
           )
         });
       },
-      getcontestant()
+      getcontestant(page)
       {
         this.Loading=true;
         var vm=this;
-        axios.get(`/rating-get-data/`+this.Activity.id+`/`+this.CurrentContestant).then(function(response)
+        axios.get(`/rating-get-data/`+this.Activity.id+`?page=`+page).then(function(response)
         {
           console.log(response);
-          vm.contestantData = response.data.ratings;
-          vm.Average=response.data.average;
+          vm.contestantData = response.data.data[0];
+          vm.currentContestantPage = response.data.current_page;
+          vm.contestantLastPage = response.data.last_page;
+          for (var i = 0; i < vm.EventCrit.length; i++) {
+            vm.Rates[i] = 0;
+            if (response.data.data[0].ratings!='')
+            {
+              vm.updateRates[i] =response.data.data[0].ratings[i].rate;
+            }
+
+          }
           vm.Loading=false;
+          vm.AddUpdatableRates();
         });
       },
       nextBtn()
       {
-        if (this.Activity.NumberContestant==this.CurrentContestant)
-        {
-          return false;
-        }else if (this.contestantData==null)
+      if (this.contestantData.ratings=='')
         {
           swal({
-            title: 'Why?',
-            text: "This contestant is absent?",
+            title: 'Confirm pass?',
+            text: "this contestant will be automatically rated zero",
             type: 'question',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -164,42 +209,40 @@ import axios from 'axios';
             confirmButtonText: 'Yes, proceed'
           }).then((result) => {
             if (result.value) {
-              this.updateRates=[];
-              this.Rates=[];
               this.Absent='0';
               this.save();
-              this.CurrentContestant++;
-              this.getcontestant();
             }
           })
         }else
         {
-          this.updateRates=[];
-          this.Rates=[];
-          this.CurrentContestant++;
-          this.getcontestant();
+          if (this.currentContestantPage < this.contestantLastPage)
+          {
+            var nextpages=this.currentContestantPage+1;
+            this.getcontestant(nextpages);
+          }
         }
       },
       backBtn()
       {
-        if (1==this.CurrentContestant)
+        if (this.currentContestantPage > 1)
         {
-          return false;
-        }else
-        {
-          this.updateRates=[];
-          this.Rates=[];
-          this.CurrentContestant--;
-          this.getcontestant();
+          this.getcontestant(this.currentContestantPage - 1);
         }
       },
       update()
       {
+        for (var i = 0; i < this.EventCrit.length; i++)
+        {
+          if ((this.updateRates[i] > this.EventCrit[i].pivot.percentjudging) || (this.updateRates[i] < 1) || (this.updateRates[i]==null) || (this.updateRates[i]=='') || (isNaN(this.updateRates[i])==true))
+          {
+            return false;
+          }
+        }
         var vm=this;
         axios.put(`/rating-update/`+this.Activity.id,{
-          Contestant:this.CurrentContestant,
+          Contestant:this.contestantData.id,
           UpdateRates:this.updateRates,
-          Criterias:this.EventCrit.criteria
+          Criterias:this.EventCrit
         }).then(function(response)
         {
           if (response.data.error!=null)
@@ -211,7 +254,7 @@ import axios from 'axios';
                response.data.error,
               'error'
             );
-            vm.getcontestant();
+            vm.getcontestant(vm.currentContestantPage);
           }else
           {
             vm.updateRates=[];
@@ -222,7 +265,7 @@ import axios from 'axios';
               'success'
             );
             console.log(response);
-            vm.getcontestant();
+            vm.getcontestant(vm.currentContestantPage);
           }
         })
       },
@@ -245,9 +288,32 @@ import axios from 'axios';
             this.getcontestant();
           }
         })
+      },
+      addCriteriaRatings()
+      {
+        var totalval=0;
+        for (var i = 0; i < this.EventCrit.length; i++)
+        {
+          totalval = totalval + Number(this.Rates[i]);
+        }
+        this.TotalRates = totalval;
+      },
+      AddUpdatableRates()
+      {
+        var totalval=0;
+        for (var i = 0; i < 5; i++)
+        {
+          if (isNaN(this.updateRates[i]) == false)
+          {
+            totalval = totalval + Number(this.updateRates[i]);
+          }else {
+            totalval = totalval + Number(0);
+          }
+        }
+        this.TotalRateUpdate= totalval;
       }
     },
-    created () {
+    mounted () {
       this.fetchData();
     },
   }
