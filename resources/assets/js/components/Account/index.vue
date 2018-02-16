@@ -2,26 +2,26 @@
   <div class="Account-manager-container">
     <div id="modal1" class="modal modal-fixed-footer">
      <div class="modal-content">
-       <h4>Edit</h4>
+       <h5>Edit</h5>
        <div class="input-field col s6">
-          <input id="fullname" placeholder="Update name" v-model="nameUpdate = UserDetail.name" type="text" class="validate">
+          <input id="fullname" placeholder="Update name" v-model="nameUpdate = UserDetail.name" type="text">
           <label for="fullname">Name</label>
        </div>
        <div class="input-field col s6">
-          <input id="username" type="text" placeholder="Update username" v-model="usernameUpdate = UserDetail.username" class="validate">
+          <input id="username" type="text" placeholder="Update username" v-model="usernameUpdate = UserDetail.username">
           <label for="username">Username</label>
        </div>
        <div class="input-field col s6">
-          <input id="changepass" type="password" placeholder="ignore if no changes" v-model="newPass" class="validate">
+          <input id="changepass" type="password" placeholder="ignore if no changes" v-model="newPass">
           <label for="changepass">Change pass</label>
        </div>
        <div class="input-field col s6">
-          <input id="newpass" type="password" v-model="confirmPass"  placeholder="ignore if no changes" class="validate">
+          <input id="newpass" type="password" v-model="confirmPass"  placeholder="ignore if no changes">
           <label for="newpass">Confirm-new pass</label>
        </div>
      </div>
      <div class="modal-footer">
-       <a href="#" v-on:click.prevent="updateUser(UserDetail.id)" class="modal-action modal-close waves-effect waves-green btn-flat ">Update</a>
+       <a href="#" v-on:click.prevent="updateUser(UserDetail.id)" class="modal-action modal-close waves-effect waves-light btn-flat ">Update</a>
      </div>
    </div>
     <h5 class="title-of-page"><i class="material-icons">list</i> Account list</h5>
@@ -99,37 +99,19 @@ import axios from 'axios';
         deleteAccount(id)
         {
           var vm=this;
-          swal({
-            title: 'Are you sure?',
-            text: "Activities related to this user will also be deleted!",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!'
-          }).then((result) => {
-            if (result.value) {
-              axios.delete(`/account-delete/`+id).then(function(response)
+          if (confirm('All activities related to this user will also be deleted, continue?')) {
+            axios.delete(`/account-delete/`+id).then(function(response)
+            {
+              if (response.data.error!=null)
               {
-                if (response.data.error!=null)
-                {
-                  swal(
-                    'Oops...',
-                    response.data.error,
-                    'error'
-                  )
-                }else
-                {
-                  vm.fetchIndex(vm.pagination.current_page);
-                  swal(
-                    'Deleted!',
-                    'Your file has been deleted.',
-                    'success'
-                  );
-                }
-              });
-            }
-          });
+                Materialize.toast(response.data.error,4000);
+              }else
+              {
+                vm.fetchIndex(vm.pagination.current_page);
+                Materialize.toast('Account deleted successfuly',4000);
+              }
+            });
+          }
         },
         FetchUser(id)
         {
@@ -149,11 +131,7 @@ import axios from 'axios';
           {
             console.log(response);
             vm.fetchIndex(1);
-            swal(
-              'Role Updated!',
-              response.data.name+' is now a administrator',
-              'success'
-            );
+            Materialize.toast('Role updated',4000);
           }).catch(function(error)
           {
             console.log(error);
@@ -168,19 +146,11 @@ import axios from 'axios';
             if (response.data.error!=null)
             {
               vm.fetchIndex(1);
-              swal(
-                'Oops!',
-                response.data.error,
-                'error'
-              );
+              Materialize.toast(response.data.error,4000);
             }else
             {
               vm.fetchIndex(1);
-              swal(
-                'Role Updated!',
-                response.data.name+' is now a judge',
-                'success'
-              );
+              Materialize.toast('Role updated',4000);
             }
           }).catch(function(error)
           {
@@ -195,71 +165,42 @@ import axios from 'axios';
             console.log(response);
             if (response.data.error==null)
             {
-              swal(
-                'Status changed!',
-                'status updated',
-                'success'
-              );
+              Materialize.toast('Status updated',4000);
               vm.fetchIndex(1);
             }else
             {
-              swal(
-                'Oops!',
-                response.data.error,
-                'error'
-              );
+              Materialize.toast(response.data.error,4000);
             }
           })
         },
         updateUser(id)
         {
           var vm=this;
-          swal({
-            title: 'Are you sure?',
-            text: "confirm update",
-            type: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!'
-          }).then((result) => {
-            if (result.value) {
-              axios.put(`/account-update/`+id,{
-                name:this.nameUpdate,
-                username:this.usernameUpdate,
-                password:this.newPass,
-                password_confirmation:this.confirmPass
-              }).then(function(response)
-              {
-                console.log(response);
-                if (response.data.error!=null)
-                {
-                  swal(
-                    'Oops...',
-                    response.data.error,
-                    'error'
-                  )
-                }else
-                {
-                  swal(
-                    'Updated',
-                    'user`s data updated',
-                    'success'
-                  );
-                  vm.fetchIndex(1);
-                }
 
-              }).catch(function(error)
+          if (confirm('Confirm update?')) {
+            axios.put(`/account-update/`+id,{
+              name:this.nameUpdate,
+              username:this.usernameUpdate,
+              password:this.newPass,
+              password_confirmation:this.confirmPass
+            }).then(function(response)
+            {
+              console.log(response);
+              if (response.data.error!=null)
               {
-                console.log(error);
-                swal(
-                  'Oops...',
-                  error.response.data.message,
-                  'error'
-                )
-              })
-            }
-          });
+                Materialize.toast(response.data.error,4000);
+              }else
+              {
+                Materialize.toast('User updated',4000);
+                vm.fetchIndex(1);
+              }
+
+            }).catch(function(error)
+            {
+              console.log(error);
+              Materialize.toast(error.response.data,4000);
+            })
+          }
         },
     },
     computed:{

@@ -23,6 +23,8 @@ Vue.component('eventindex', require('./components/Event/index.vue'));
 Vue.component('ratingcreate', require('./components/Rating/create.vue'));
 Vue.component('accountindex', require('./components/Account/index.vue'));
 Vue.component('createactivity', require('./components/Setup/createActivity.vue'));
+Vue.component('registerform', require('./components/Account/Register.vue'));
+Vue.component('results', require('./components/Results/Result.vue'));
 const app = new Vue({
     el: '#app'
 });

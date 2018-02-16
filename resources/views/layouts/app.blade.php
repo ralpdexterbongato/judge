@@ -94,12 +94,9 @@
                <p class="grey-text text-lighten-4"></p>
              </div>
              <div class="col l4 offset-l2 s12">
-               <h5 class="white-text">Group members</h5>
+               <h5 class="white-text"></h5>
                <ul>
-                 <li><a class="grey-text text-lighten-3" href="#!">Joronie Roluna</a></li>
-                 <li><a class="grey-text text-lighten-3" href="#!">Eunice Fe Claros</a></li>
-                 <li><a class="grey-text text-lighten-3" href="#!">Jacky Tirambolo</a></li>
-                 <li><a class="grey-text text-lighten-3" href="#!">Baw kinsa</a></li>
+
                </ul>
              </div>
            </div>
@@ -112,29 +109,7 @@
        </footer>
        @if (Session::get('success')!=null)
          <script type="text/javascript">
-         swal(
-             'Success!',
-             'Thank you',
-             'success'
-           )
-         </script>
-       @endif
-       @if ($errors->all()!=null)
-         <script type="text/javascript">
-         swal(
-             'Oops! something is not right',
-             'Please fillup again',
-             'error'
-           )
-         </script>
-       @endif
-       @if (Session::has('error'))
-         <script type="text/javascript">
-         swal(
-             'Oops! something is not right',
-             '{{Session::get('error')}}',
-             'error'
-           )
+         Materialize.toast('Success',4000);
          </script>
        @endif
 
@@ -151,5 +126,21 @@
     </script>
     <script type="text/javascript" src="/js/materialize.min.js">
     </script>
+    @if ($errors->all()!=null)
+      <script type="text/javascript">
+      Materialize.toast('Validation failed',4000);
+      </script>
+    @endif
+    @if (Session::has('loginerror'))
+      <script type="text/javascript">
+        Materialize.toast('Incorrect username or password',4000);
+      </script>
+    @endif
+    @if (Session::has('errorNotDone'))
+      <script type="text/javascript">
+        Materialize.toast('Scores are not yet complete',4000);
+      </script>
+    @endif
+    @yield('scripts');
   </body>
 </html>

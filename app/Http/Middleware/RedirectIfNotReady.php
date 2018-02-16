@@ -32,7 +32,7 @@ class RedirectIfNotReady
           return $next($request);
         }else
         {
-          return redirect('/setup-index')->with('error', 'Judges are not done yet');
+          return redirect('/setup-index')->with('errorNotDone', 'Scores are not yet complete');
         }
     }
 }

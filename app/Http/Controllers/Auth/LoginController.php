@@ -17,7 +17,7 @@ class LoginController extends Controller
     $checkifdisabled=User::where('username', $request->username)->get(['disabled']);
     if (isset($checkifdisabled[0]) && ($checkifdisabled[0]->disabled == '0'))
     {
-      return redirect()->back()->with('error', 'Your account has been disabled by the administrator');
+      return redirect()->back()->with('loginerror', 'Your account has been disabled by the administrator');
     }
     $credentials = array('username' => $request->username,'password'=>$request->password);
     if (Auth::attempt($credentials))
@@ -30,7 +30,7 @@ class LoginController extends Controller
         return redirect('/events-panel');
       }
     }
-    return redirect('/')->with('error', 'Incorrect Username or Password');
+    return redirect('/')->with('loginerror', 'Incorrect Username or Password');
   }
   public function Logout()
   {

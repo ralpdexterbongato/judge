@@ -1,14 +1,14 @@
 <template lang="html">
 <div class="Rating-Create-Container">
   <div class="found-container" v-if="Activity.Name!=null">
-    <h5>ACTIVITY: {{Activity.Name}}</h5>
-    <h6>EVENT: {{theEvent.title}}</h6>
+    <h5>{{Activity.Name}}</h5>
+    <h6>{{theEvent.title}}</h6>
     <div class="rating-navs">
       <div class="">
-        <a class="btn-floating btn-large waves-effect waves-light blue darken-1" v-if="currentContestantPage!=1" v-on:click="backBtn()"><i class="material-icons">arrow_back</i></a>
+        <a class="btn-floating btn-small waves-effect waves-light blue darken-1" :class="[currentContestantPage!=1?'':'disabled']" v-on:click="backBtn()"><i class="material-icons">arrow_back</i></a>
       </div>
       <div class="">
-        <a class="btn-floating btn-large waves-effect waves-light blue darken-1" v-if="currentContestantPage!= contestantLastPage " v-on:click="nextBtn()"><i class="material-icons">arrow_forward</i></a>
+        <a class="btn-floating btn-small waves-effect waves-light blue darken-1" :class="[currentContestantPage!= contestantLastPage?'':'disabled']" v-on:click="nextBtn()"><i class="material-icons">arrow_forward</i></a>
       </div>
     </div>
     <div class="rating-table-container z-depth-1">
@@ -17,9 +17,8 @@
       </div>
       <div class="rating-table-padding">
         <div class="rating-card-title">
-          <h6><i class="material-icons">format_list_numbered</i> Scoring card</h6>
-          <h5 class="contestant-number" onclick="$('#picture-prev-modal').modal('open')"><span class="blue-text">{{contestantData.name}}</span>
-          </h5>
+          <p>{{contestantData.name}}</p>
+          <h6 onclick="$('#picture-prev-modal').modal('open')"><img v-if="contestantData.picture!=null" :src="'/storage/images/'+contestantData.picture" alt=""></h6>
         </div>
         <div class="divider">
         </div>
@@ -59,7 +58,7 @@
     </div>
   </div>
   <div v-else class="not-found">
-    <h5 class="grey-text"><i class="material-icons">close</i> No Activity event found</h5>
+    <h6 class="grey-text"><i class="material-icons">close</i> No event to judge found</h6>
   </div>
   <div id="picture-prev-modal" class="modal">
     <div class="modal-content">
@@ -104,18 +103,10 @@ import axios from 'axios';
           {
             if (response.data.error!=null)
             {
-              swal(
-                'Oops...',
-                response.data.error,
-                'error'
-              )
+              Materialize.toast(response.data.error,4000);
             }else
             {
-              swal(
-                'Oops...',
-                'No Activity event is set for you!',
-                'error'
-              )
+              Materialize.toast('no event setup found',4000);
             }
           }else
           {
@@ -146,18 +137,10 @@ import axios from 'axios';
         {
           if (response.data.error!=null)
           {
-            swal(
-              'Oops...',
-              response.data.error,
-              'error'
-            );
+            Materialize.toast(response.data.error,4000);
           }else
           {
-            swal(
-              'Success!',
-              'Submitted successfully!',
-              'success'
-            );
+            Materialize.toast('Sumitted successfully',4000);
             console.log(response);
             vm.Rates=[];
             vm.Absent='';
@@ -166,11 +149,7 @@ import axios from 'axios';
         },function(error)
         {
           console.log(error);
-          swal(
-            'Ooops!',
-            error.response.data.message,
-            'error'
-          )
+          Materialize.toast(error.response.data.message,4000);
         });
       },
       getcontestant(page)
@@ -199,20 +178,11 @@ import axios from 'axios';
       {
       if (this.contestantData.ratings=='')
         {
-          swal({
-            title: 'Confirm pass?',
-            text: "this contestant will be automatically rated zero",
-            type: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, proceed'
-          }).then((result) => {
-            if (result.value) {
-              this.Absent='0';
-              this.save();
-            }
-          })
+          if (confirm('This contestant is absent?'))
+          {
+            this.Absent='0';
+            this.save();
+          }
         }else
         {
           if (this.currentContestantPage < this.contestantLastPage)
@@ -249,21 +219,13 @@ import axios from 'axios';
           {
             vm.updateRates=[];
             vm.Rates=[];
-            swal(
-              'Oops...',
-               response.data.error,
-              'error'
-            );
+            Materialize.toast(response.data.error,4000);
             vm.getcontestant(vm.currentContestantPage);
           }else
           {
             vm.updateRates=[];
             vm.Rates=[];
-            swal(
-              'Updated!',
-              'Updated successfully!',
-              'success'
-            );
+            Materialize.toast('Updated successfully',4000);
             console.log(response);
             vm.getcontestant(vm.currentContestantPage);
           }
@@ -271,23 +233,14 @@ import axios from 'axios';
       },
       ContestantAbsent()
       {
-        swal({
-          title: 'Confirmation',
-          text: "This contestant is absent?",
-          type: 'question',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes, proceed'
-        }).then((result) => {
-          if (result.value) {
-            this.updateRates=[];
-            this.Rates=[];
-            this.Absent='0';
-            this.save();
-            this.getcontestant();
-          }
-        })
+        if (confirm('This contestant is absent?'))
+        {
+          this.updateRates=[];
+          this.Rates=[];
+          this.Absent='0';
+          this.save();
+          this.getcontestant();
+        }
       },
       addCriteriaRatings()
       {

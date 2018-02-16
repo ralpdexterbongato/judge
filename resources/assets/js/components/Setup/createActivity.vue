@@ -4,17 +4,17 @@
       <div class="other-activity-form-top z-depth-1 blue darken-1 white-text text-darken-3">
         <div class="input-field col s6">
           <i class="material-icons prefix">local_activity</i>
-          <input id="icon_prefix" name="NameActivity" placeholder="..." v-model="ActivityName" type="text" class="white-text text-darken-3">
+          <input id="icon_prefix" name="NameActivity" placeholder="..." v-model="ActivityName" type="text" class="white-text text-darken-3 white-bottom">
           <label class="white-text text-darken-3" for="icon_prefix">Activity</label>
         </div>
         <div class="input-field col s12">
             <i class="material-icons prefix">title</i>
-            <input disabled class="white-text text-darken-3" :value="eventdata.title" id="disabled" type="text">
+            <input disabled class="white-text text-darken-3 white-bottom" :value="eventdata.title" id="disabled" type="text">
             <label class="white-text text-darken-3" for="disabled">Event type</label>
         </div>
         <div class="input-field col s12">
           <i class="material-icons prefix">person</i>
-          <select  id="selectedjudge" multiple>
+          <select  id="selectedjudge" class="white-bottom" multiple>
             <option value="" disabled selected>List</option>
             <option v-for="judge in judges" :value="judge.id">{{judge.name}}</option>
           </select>
@@ -33,7 +33,7 @@
           <div class="criteria-and-percent-container" v-for="(criteria,key) in eventdata.criteria">
             <div class="input-field col s6">
               <i class="material-icons prefix">%</i>
-              <input placeholder="" v-on:keyup="totalPercent(key)" v-model="CriteriaPercent[key]" min="1" class="validate" type="number">
+              <input placeholder="" class="white-bottom" v-on:keyup="totalPercent(key)" v-model="CriteriaPercent[key]" min="1" type="number">
               <label class="white-text text-darken-3">{{criteria.name}}</label>
             </div>
           </div>
@@ -85,13 +85,13 @@
         {
           if (this.total!=100)
           {
-            console.log('error1');
+            Materialize.toast('The total must be 100%',4000);
             return false;
           }
           for (var i = 0; i < this.eventdata.criteria.length; i++) {
             if ((isNaN(this.CriteriaPercent[i]) == true) || (this.CriteriaPercent[i]==null) || (this.CriteriaPercent[i]==0) || (this.CriteriaPercent[i] < 1) ||( this.CriteriaPercent[i] > 100))
             {
-              console.log('error2');
+              Materialize.toast('The percentage cannot be empty,less than 1 or text',4000);
               return false;
             }
           }
@@ -105,16 +105,20 @@
             criterias:this.eventdata.criteria,
           }).then(function(response)
           {
-            swal(
-              'New',
-              'setup created!',
-              'success'
-            );
+            Materialize.toast('Activity setup created',4000);
             console.log(response);
             window.location.href= window.location.href;
           }).catch(function(error)
           {
             console.log(error);
+            if (error.response.data.errors.NameActivity!=null)
+            {
+              Materialize.toast(error.response.data.errors.NameActivity[0],4000);
+            }
+            if (error.response.data.errors.judges!=null)
+            {
+              Materialize.toast(error.response.data.errors.judges[0],4000);
+            }
           });
         }
       }

@@ -30,6 +30,7 @@ class SetupController extends Controller
       'eventid'=>'required',
       'NameActivity'=>'required|max:30',
       'percent.*'=>'required|numeric|min:1|max:100',
+      'judges'=>'required',
     ]);
 
     if (count($request->percent)!=count($request->criterias))

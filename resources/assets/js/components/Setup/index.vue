@@ -7,14 +7,19 @@
           <span class="card-title">{{data.Name}}</span>
           <table>
             <tr>
-              <th>Event:</th>
-              <td>{{data.event.title}}</td>
+              <td>Event</td>
             </tr>
             <tr>
-              <th>Contestants:</th>
+              <td>
+                <div class="chip event-wrap-name">
+                  {{data.event.title}}
+                </div>
+              </td>
             </tr>
             <tr>
-              <th></th>
+              <td>Contestants:</td>
+            </tr>
+            <tr>
               <td class="contestant-prev-container">
                 <div class="chip" v-for="contestant in data.contestants">
                   <img v-if="contestant.picture!=''" :src="'storage/images/'+contestant.picture" alt="Person">
@@ -24,10 +29,9 @@
               </td>
             </tr>
             <tr>
-              <th>Judges:</th>
+              <td>Judges:</td>
             </tr>
             <tr>
-              <th></th>
               <td class="judges-prev-container">
                 <div class="chip" v-for="judge in data.judges">
                   {{judge.name}}
@@ -36,11 +40,12 @@
             </tr>
           </table>
         </div>
-        <div class="card-action white setup-actions">
-          <p>{{data.created_at}}</p>
+        <div class="card-action blue darken-2 setup-actions">
+          <div class="">
+            <a href="#" v-if="data.isActive==null" class="yellow-text" v-on:click.prevent="updateEnable(data.id)">Disabled</a>
+            <a href="#" v-else class="white-text" v-on:click.prevent="updateDisable(data.id)">Enabled</a>
+          </div>
           <div class="setup-btns-container">
-            <a href="#" v-if="data.isActive==null" v-on:click.prevent="updateEnable(data.id)">Disabled</a>
-            <a href="#" v-else class="green-text" v-on:click.prevent="updateDisable(data.id)">Enabled</a>
             <div class="">
               <a :href="'/results-show/'+data.id" class="btn btn-floating"><i class="material-icons white-text">remove_red_eye</i></a>
               <a href="#" class="btn btn-floating" v-on:click.prevent="Delete(data.id)"><i class="material-icons white-text">delete</i></a>
@@ -63,28 +68,55 @@
         <input id="name" v-model="name" type="text">
         <label for="name">Name/Group</label>
      </div>
-      <input type="file" @change="onFileChange">
-      <img class="prev-image" :src="image" alt="">
+     <a class="btn" @click="toggleShow">set image</a>
+   	<img class="contestant-pic-prev" :src="imgDataUrl">
    </div>
    <div class="modal-footer">
      <a href="#" v-on:click.prevent="submitContestant()" class="modal-action modal-close waves-effect waves-green btn-flat ">Add</a>
    </div>
  </div>
+ <my-upload field="img"
+        @crop-success="cropSuccess"
+        @crop-upload-success="cropUploadSuccess"
+        @crop-upload-fail="cropUploadFail"
+        v-model="show"
+   :width="300"
+   :height="300"
+   :params="params"
+   :headers="headers"
+   img-format="png"
+   langType="en"
+   :noCircle="true"
+   :noSquare="true"
+   ></my-upload>
 </div>
 </template>
 
 <script>
+
 import axios from 'axios';
+import myUpload from 'vue-image-crop-upload';
   export default {
     data () { return {
       IndexData:[],
       pagination:[],
       offset:4,
-      image:'',
       name:'',
       currentSelectedSetup:null,
+      show: false,
+			params: {
+				token: '123456798',
+				name: 'avatar',
+			},
+			headers: {
+				smail: '*_~'
+			},
+			imgDataUrl: ''
       }
     },
+    components: {
+			'my-upload': myUpload
+		},
     // props: [],
     methods: {
       FetchData(page)
@@ -100,28 +132,15 @@ import axios from 'axios';
       Delete(id)
       {
         var vm=this;
-        swal({
-          title: 'Are you sure?',
-          text: "You won't be able to revert this!",
-          type: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Yes!'
-        }).then((result) => {
-          if (result.value) {
-            axios.delete(`/setup-delete/`+id).then(function(response)
-            {
-              console.log(response);
-              vm.FetchData();
-              swal(
-                'Deleted!',
-                'Your file has been deleted.',
-                'success'
-              )
-            })
-          }
-        })
+        if (confirm('Are you sure?'))
+        {
+          axios.delete(`/setup-delete/`+id).then(function(response)
+          {
+            console.log(response);
+            vm.FetchData();
+            Materialize.toast('Deleted successfully',4000);
+          });
+        }
       },
       changepage(next){
         this.pagination.current_page = next;
@@ -130,85 +149,40 @@ import axios from 'axios';
       updateEnable(id)
       {
         var vm=this;
-        swal({
-            title: 'Are you sure?',
-            text: "The other enabled setup will be disabled",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes!'
-          }).then((result) => {
-            if (result.value) {
-              axios.put(`/setup-enable/`+id).then(function(response)
-              {
-                console.log(response);
-                swal(
-                  'Enabled!',
-                  'Setup enabled',
-                  'success'
-                )
-                vm.FetchData();
-              });
-            }
-          })
+        if (confirm('Are you sure? other setups will be disabled'))
+        {
+          axios.put(`/setup-enable/`+id).then(function(response)
+          {
+            console.log(response);
+            Materialize.toast('Enabled successfully',4000);
+            vm.FetchData();
+          });
+        }
       },
       updateDisable(id)
       {
         var vm=this;
-        swal({
-            title: 'Are you sure?',
-            text: "This setup will be disabled",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes,disable it!'
-          }).then((result) => {
-            if (result.value) {
-              axios.put(`/setup-disable/`+id).then(function(response)
-              {
-                console.log(response);
-                swal(
-                  'Disabled!',
-                  'Setup disabled',
-                  'success'
-                )
-                vm.FetchData();
-              });
-            }
-          })
+        if (confirm('Are you sure?')) {
+          axios.put(`/setup-disable/`+id).then(function(response)
+          {
+            console.log(response);
+            Materialize.toast('Disabled successfully',4000);
+            vm.FetchData();
+          });
+        }
       },
-      onFileChange(e) {
-          var files = e.target.files || e.dataTransfer.files;
-          if (!files.length)
-            return;
-          this.createImage(files[0]);
-        },
-        createImage(file) {
-          var image = new Image();
-          var reader = new FileReader();
-          var vm = this;
-
-          reader.onload = (e) => {
-            vm.image = e.target.result;
-          };
-          reader.readAsDataURL(file);
-        },
         submitContestant()
         {
           var vm=this;
           axios.post(`/contestant-add/`+vm.currentSelectedSetup,{
             name:this.name,
-            image:this.image
+            image:this.imgDataUrl
           }).then(function(response)
           {
             console.log(response);
-            swal(
-              'Contestant',
-              'Added sucessfully',
-              'success'
-            );
+            Materialize.toast('Added successfully',4000);
+            vm.name='';
+            vm.imgDataUrl='';
             vm.FetchData();
           }).then(function(error)
           {
@@ -223,18 +197,50 @@ import axios from 'axios';
             axios.delete(`/contestant-remove/`+id).then(function(response)
             {
               console.log(response);
-              swal(
-                'Removed',
-                'removed sucessfully',
-                'success'
-              );
+              Materialize.toast('removed successfully',4000);
               vm.FetchData();
             }).catch(function(error)
             {
               console.log(error);
             });
           }
-        }
+        },
+        toggleShow() {
+				this.show = !this.show;
+			},
+            /**
+			 * crop success
+			 *
+			 * [param] imgDataUrl
+			 * [param] field
+			 */
+			cropSuccess(imgDataUrl, field){
+				console.log('-------- crop success --------');
+				this.imgDataUrl = imgDataUrl;
+			},
+			/**
+			 * upload success
+			 *
+			 * [param] jsonData  server api return data, already json encode
+			 * [param] field
+			 */
+			cropUploadSuccess(jsonData, field){
+				console.log('-------- upload success --------');
+				console.log(jsonData);
+				console.log('field: ' + field);
+			},
+			/**
+			 * upload fail
+			 *
+			 * [param] status    server api return error status, like 500
+			 * [param] field
+			 */
+			cropUploadFail(status, field){
+				console.log('-------- upload fail --------');
+				console.log(status);
+				console.log('field: ' + field);
+			}
+
     },
     created () {
       this.FetchData();

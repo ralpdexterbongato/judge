@@ -19,7 +19,7 @@ class ResultsController extends Controller
     public function show($setupId)
     {
       Session::forget('SessionRank');
-      $judges=JudgesSetup::where('setup_id', $setupId)->get(['user_id']);
+      $judges=JudgesSetup::where('setup_id', $setupId)->with('User')->get(['user_id','id']);
       $numberOfJudges = count($judges);
       $SetupData=Setup::with('Event')->where('id',$setupId)->get();
       $preAvg = array();

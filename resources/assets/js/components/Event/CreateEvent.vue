@@ -53,28 +53,15 @@
           if(response.data.error==null)
           {
               vm.getCriterias();
-              vm.$swal(
-                'New',
-                'Criteria added!',
-                'success'
-              );
+              Materialize.toast('Criteria added',4000);
               vm.CriteriaNew='';
           }else
           {
-            vm.$swal(
-              'Sorry',
-              response.data.error,
-              'error'
-            );
+            Materialize.toast(response.data.error,4000);
           }
           },function(error)
           {
             console.log(error);
-            vm.$swal(
-              'Sorry',
-              error.response.data.message,
-              'error'
-            );
           });
       },
       getCriterias()
@@ -99,56 +86,37 @@
           vm.titleEvent='';
           vm.checkedCriteria=[];
           console.log(response);
-          vm.$swal(
-            'New',
-            'event created!',
-            'success'
-          );
+          Materialize.toast('Event successfully created',4000);
         },function(error)
         {
           console.log(error);
-          vm.$swal(
-            'Sorry',
-            error.response.data.message,
-            'error'
-          );
+          if (error.response.data.errors.Title!=null)
+          {
+            Materialize.toast(error.response.data.errors.Title[0],4000);
+          }
+          if (error.response.data.errors.Criterias!=null)
+          {
+            Materialize.toast(error.response.data.errors.Criterias[0],4000);
+          }
         });
       },
       CriteriaRemove(id)
       {
         var vm=this;
-        swal({
-          title: 'Are you sure?',
-          text: "Please confirm",
-          type: 'warning',
-          showCancelButton: true,
-          confirmButtonColor: '#3085d6',
-          cancelButtonColor: '#d33',
-          confirmButtonText: 'Confirm'
-        }).then((result) => {
-          if (result.value) {
-            axios.delete(`/criteria-delete/`+id).then(function(response)
+        if (confirm('Are you sure?')) {
+          axios.delete(`/criteria-delete/`+id).then(function(response)
+          {
+            console.log(response);
+            if (response.data.error!=null)
             {
-              console.log(response);
-              if (response.data.error!=null)
-              {
-                vm.$swal(
-                  'Sorry',
-                  response.data.error,
-                  'error'
-                );
-              }else
-              {
-                vm.getCriterias();
-                swal(
-                  'Deleted!',
-                  'Your file has been deleted.',
-                  'success'
-                );
-              }
-            });
-          }
-        })
+              Materialize.toast(response.data.error,4000);
+            }else
+            {
+              vm.getCriterias();
+              Materialize.toast('criteria removed',4000);
+            }
+          });
+        }
       }
     },
     created () {
