@@ -141,6 +141,6 @@
         Materialize.toast('Scores are not yet complete',4000);
       </script>
     @endif
-    @yield('scripts');
+    @yield('scripts')
   </body>
 </html>

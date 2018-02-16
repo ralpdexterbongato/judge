@@ -31,7 +31,7 @@
         </tbody>
       </table>
     </div>
-    <div class="showbtn blue-text">
+    <div class="showbtn blue-text" v-if="Reveal[0]==true">
       <p v-if="showmore ==false" v-on:click="showmore =true"><i class="material-icons">more</i> show more</p>
       <p v-if="showmore ==true" v-on:click="showmore =false"><i class="material-icons">expand_less</i> show less</p>
     </div>
