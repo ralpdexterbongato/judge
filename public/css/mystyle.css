@@ -509,6 +509,7 @@ nav
   margin:auto;
   width: 100%;
 }
+
 .found-container h5
 {
   font-size:20px;
@@ -519,7 +520,7 @@ nav
 }
 @media (max-width:500px)
 {
-  .found-container h5
+  .found-container > h5
   {
     text-align: center;
   }
@@ -527,6 +528,24 @@ nav
   {
     text-align: center;
   }
+  .predictionOpener
+  {
+    margin:0 auto!important;
+  }
+  .prediction-wrap
+  {
+    display: flex;
+    justify-content: center;
+  }
+  .rank-predict-table-container table
+  {
+    font-size: 13px!important;
+    font-weight: 600;
+  }
+}
+.rank-predict-table-container table tr:nth-child(odd)
+{
+  background: #e0e0e0;
 }
 
 /*results*/

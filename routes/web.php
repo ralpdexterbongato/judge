@@ -46,6 +46,7 @@ Route::get('/rating-create-data','RatingController@createData');
 Route::get('/rating-get-data/{setupId}','RatingController@Contestant');
 
 Route::get('/results-show/{setupId}','ResultsController@show')->middleware('IfNotReady');
+Route::get('/get-own-score-rank/{setupid}','RatingController@getOwnScoreRanking');
 
 Route::get('/account-index','AccountController@index');
 Route::delete('/account-delete/{id}','AccountController@delete');
@@ -58,3 +59,5 @@ Route::put('/account-update-enable-toggle/{id}','AccountController@toggleEnable'
 
 Route::post('/contestant-add/{setupid}','ContestantController@store');
 Route::delete('/contestant-remove/{contestantid}','ContestantController@delete');
+
+Route::get('/check-if-done/{setupid}','RatingController@checkifDone');

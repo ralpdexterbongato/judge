@@ -184,9 +184,10 @@ import myUpload from 'vue-image-crop-upload';
             vm.name='';
             vm.imgDataUrl='';
             vm.FetchData();
-          }).then(function(error)
+          }).catch(function(error)
           {
-            console.log(error);
+            console.log(error.response.data.errors);
+            Materialize.toast(error.response.data.errors.name[0],4000);
           });
         },
         deleteContestant(id)

@@ -3,6 +3,9 @@
   <div class="found-container" v-if="Activity.Name!=null">
     <h5>{{Activity.Name}}</h5>
     <h6>{{theEvent.title}}</h6>
+    <div class="prediction-wrap">
+      <a href="#" v-if="IsDone==0" v-on:click.prevent="getRank()" onclick="$('#rank-modal').modal('open');" class=" predictionOpener">RANKING</a>
+    </div>
     <div class="rating-navs">
       <div class="">
         <a class="btn-floating btn-small waves-effect waves-light blue darken-1" :class="[currentContestantPage!=1?'':'disabled']" v-on:click="backBtn()"><i class="material-icons">arrow_back</i></a>
@@ -68,6 +71,32 @@
       </div>
     </div>
   </div>
+  <div id="rank-modal" class="modal">
+    <div class="modal-content">
+      <h5>Ranking</h5>
+      <p>This ranking is according to the scores you have submitted</p>
+      <div class="rank-predict-table-container">
+        <table>
+          <tr>
+            <th>Rank</th>
+            <th>Contestants</th>
+            <th>Rating</th>
+          </tr>
+          <tr v-for="(rank,rankloop) in predictionRank">
+            <td>
+              <span v-if="rank.place-1 == 0"><i class="material-icons">star</i></span>
+              <span v-else>{{rank.place-1}}</span>
+            </td>
+            <td>{{rank.name}}</td>
+            <td>{{rank.totalrate}}%</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <a href="#!" v-on:click.prevent class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+    </div>
+  </div>
 </div>
 </template>
 
@@ -87,11 +116,25 @@ import axios from 'axios';
       Loading:false,
       Absent:'',
       theEvent:[],
-      TotalRateUpdate:0
+      TotalRateUpdate:0,
+      predictionRank:[],
+      IsDone:1,
       }
     },
     props: [],
     methods: {
+      getRank()
+      {
+        var vm=this;
+        axios.get(`/get-own-score-rank/`+this.Activity.id).then(function(response)
+        {
+          console.log(response);
+          vm.predictionRank=response.data;
+        }).catch(function(error)
+        {
+          console.log(error);
+        });
+      },
       fetchData()
       {
         var vm=this;
@@ -114,7 +157,21 @@ import axios from 'axios';
             vm.EventCrit=response.data.eventCriteria;
             vm.theEvent = response.data.event[0];
             vm.getcontestant(vm.currentContestantPage);
+            vm.checkifDone();
           }
+        });
+
+      },
+      checkifDone()
+      {
+        var vm=this;
+        axios.get(`/check-if-done/`+vm.Activity.id).then(function(response)
+        {
+          console.log(response);
+          vm.IsDone = response.data.response;
+        }).catch(function(error)
+        {
+          console.log(error);
         });
       },
       save()
@@ -145,6 +202,7 @@ import axios from 'axios';
             vm.Rates=[];
             vm.Absent='';
             vm.getcontestant(vm.currentContestantPage);
+            vm.checkifDone();
           }
         },function(error)
         {
@@ -268,6 +326,7 @@ import axios from 'axios';
     },
     mounted () {
       this.fetchData();
+
     },
   }
 </script>

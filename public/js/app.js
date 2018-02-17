@@ -45892,8 +45892,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         vm.name = '';
         vm.imgDataUrl = '';
         vm.FetchData();
-      }).then(function (error) {
-        console.log(error);
+      }).catch(function (error) {
+        console.log(error.response.data.errors);
+        Materialize.toast(error.response.data.errors.name[0], 4000);
       });
     },
     deleteContestant: function deleteContestant(id) {
@@ -49060,6 +49061,35 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -49077,12 +49107,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
       Loading: false,
       Absent: '',
       theEvent: [],
-      TotalRateUpdate: 0
+      TotalRateUpdate: 0,
+      predictionRank: [],
+      IsDone: 1
     };
   },
 
   props: [],
   methods: {
+    getRank: function getRank() {
+      var vm = this;
+      __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/get-own-score-rank/' + this.Activity.id).then(function (response) {
+        console.log(response);
+        vm.predictionRank = response.data;
+      }).catch(function (error) {
+        console.log(error);
+      });
+    },
     fetchData: function fetchData() {
       var vm = this;
       __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/rating-create-data').then(function (response) {
@@ -49099,7 +49140,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           vm.EventCrit = response.data.eventCriteria;
           vm.theEvent = response.data.event[0];
           vm.getcontestant(vm.currentContestantPage);
+          vm.checkifDone();
         }
+      });
+    },
+    checkifDone: function checkifDone() {
+      var vm = this;
+      __WEBPACK_IMPORTED_MODULE_0_axios___default.a.get('/check-if-done/' + vm.Activity.id).then(function (response) {
+        console.log(response);
+        vm.IsDone = response.data.response;
+      }).catch(function (error) {
+        console.log(error);
       });
     },
     save: function save() {
@@ -49124,6 +49175,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
           vm.Rates = [];
           vm.Absent = '';
           vm.getcontestant(vm.currentContestantPage);
+          vm.checkifDone();
         }
       }, function (error) {
         console.log(error);
@@ -49239,6 +49291,28 @@ var render = function() {
           _c("h5", [_vm._v(_vm._s(_vm.Activity.Name))]),
           _vm._v(" "),
           _c("h6", [_vm._v(_vm._s(_vm.theEvent.title))]),
+          _vm._v(" "),
+          _c("div", { staticClass: "prediction-wrap" }, [
+            _vm.IsDone == 0
+              ? _c(
+                  "a",
+                  {
+                    staticClass: " predictionOpener",
+                    attrs: {
+                      href: "#",
+                      onclick: "$('#rank-modal').modal('open');"
+                    },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        _vm.getRank()
+                      }
+                    }
+                  },
+                  [_vm._v("RANKING")]
+                )
+              : _vm._e()
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "rating-navs" }, [
             _c("div", {}, [
@@ -49527,6 +49601,61 @@ var render = function() {
             : _vm._e()
         ])
       ])
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "modal", attrs: { id: "rank-modal" } }, [
+      _c("div", { staticClass: "modal-content" }, [
+        _c("h5", [_vm._v("Ranking")]),
+        _vm._v(" "),
+        _c("p", [
+          _vm._v("This ranking is according to the scores you have submitted")
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "rank-predict-table-container" }, [
+          _c(
+            "table",
+            [
+              _vm._m(1),
+              _vm._v(" "),
+              _vm._l(_vm.predictionRank, function(rank, rankloop) {
+                return _c("tr", [
+                  _c("td", [
+                    rank.place - 1 == 0
+                      ? _c("span", [
+                          _c("i", { staticClass: "material-icons" }, [
+                            _vm._v("star")
+                          ])
+                        ])
+                      : _c("span", [_vm._v(_vm._s(rank.place - 1))])
+                  ]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(rank.name))]),
+                  _vm._v(" "),
+                  _c("td", [_vm._v(_vm._s(rank.totalrate) + "%")])
+                ])
+              })
+            ],
+            2
+          )
+        ])
+      ]),
+      _vm._v(" "),
+      _c("div", { staticClass: "modal-footer" }, [
+        _c(
+          "a",
+          {
+            staticClass:
+              "modal-action modal-close waves-effect waves-green btn-flat",
+            attrs: { href: "#!" },
+            on: {
+              click: function($event) {
+                $event.preventDefault()
+              }
+            }
+          },
+          [_vm._v("Close")]
+        )
+      ])
     ])
   ])
 }
@@ -49538,6 +49667,18 @@ var staticRenderFns = [
     return _c("h6", { staticClass: "grey-text" }, [
       _c("i", { staticClass: "material-icons" }, [_vm._v("close")]),
       _vm._v(" No event to judge found")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [
+      _c("th", [_vm._v("Rank")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Contestants")]),
+      _vm._v(" "),
+      _c("th", [_vm._v("Rating")])
     ])
   }
 ]

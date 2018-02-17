@@ -8,6 +8,8 @@ use App\Setup;
 use Auth;
 use App\Event;
 use App\ContestantSetup;
+use App\CriteriaSetup;
+use DB;
 class RatingController extends Controller
 {
     public function __construct()
@@ -106,4 +108,44 @@ class RatingController extends Controller
         Rating::where('setup_id',$setupId)->where('contestant_id', $request->Contestant)->where('user_id',Auth::user()->id)->where('criteria_id', $criteria->id)->update(['rate'=>$request->UpdateRates[$key]]);
       }
     }
+    public function getOwnScoreRanking($setupid)
+    {
+      $totals = DB::table('ratings')
+                 ->select(DB::raw('SUM(rate) as ratingtotal,contestant_id as contestant'))
+                 ->where('setup_id', $setupid)
+                 ->where('user_id', Auth::user()->id)
+                 ->groupBy('contestant_id')
+                 ->orderBy('ratingtotal','DESC')
+                 ->get();
+        $rankarray = array();
+        $place=1;
+        foreach ($totals as $key => $total)
+        {
+          if (((isset($totals[$key-1]))&&($totals[$key-1]->ratingtotal ==$total->ratingtotal)))
+          {
+            //do nothing
+          }elseif ($key!=0)
+          {
+            $place = $place+1;
+          }
+          $name = ContestantSetup::where('id', $total->contestant)->value('name');
+          $rankarray[] = array('name' =>$name,'totalrate'=>$total->ratingtotal,'place'=>$place);
+
+        }
+        return response()->json($rankarray);
+    }
+    public function checkifDone($setupid)
+    {
+      $numberofsubmited=Rating::where('setup_id', $setupid)->where('user_id', Auth::user()->id)->count();
+      $numberofcontestants=ContestantSetup::where('setup_id', $setupid)->count();
+      $numberofCriteria=CriteriaSetup::where('setup_id', $setupid)->count();
+      $ans = $numberofcontestants * $numberofCriteria;
+      if ($ans == $numberofsubmited)
+      {
+        return ['response'=>'0'];
+      }else {
+        return ['response'=>'1'];
+      }
+    }
+
 }

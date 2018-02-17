@@ -10,6 +10,9 @@ class ContestantController extends Controller
 {
     public function store(Request $request, $setupId)
     {
+      $this->validate($request,[
+        'name'=>'required|max:50'
+      ]);
       if ($request->image!=null)
       {
         $imageData = $request->get('image');
