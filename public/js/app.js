@@ -49586,9 +49586,7 @@ var render = function() {
     _vm._v(" "),
     _c("div", { staticClass: "modal", attrs: { id: "picture-prev-modal" } }, [
       _c("div", { staticClass: "modal-content" }, [
-        _c("h5", [
-          _vm._v("Contestant no. " + _vm._s(_vm.currentContestantPage))
-        ]),
+        _c("h5", [_vm._v(_vm._s(_vm.contestantData.name))]),
         _vm._v(" "),
         _c("div", { staticClass: "image-wrapper" }, [
           _vm.contestantData.picture != null

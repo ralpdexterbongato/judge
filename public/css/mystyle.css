@@ -434,6 +434,10 @@ nav
   width: 80px;
   border-radius: 50%;
 }
+#picture-prev-modal
+{
+  max-width: 360px;
+}
 #picture-prev-modal img
 {
   margin:0 auto;

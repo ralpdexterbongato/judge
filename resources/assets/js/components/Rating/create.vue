@@ -65,7 +65,7 @@
   </div>
   <div id="picture-prev-modal" class="modal">
     <div class="modal-content">
-      <h5>Contestant no. {{currentContestantPage}}</h5>
+      <h5>{{contestantData.name}}</h5>
       <div class="image-wrapper">
         <img v-if="contestantData.picture!=null" :src="'/storage/images/'+contestantData.picture" alt="">
       </div>
