@@ -8,13 +8,11 @@
       <form action="{{route('loginTry')}}" method="post">
         {{ csrf_field() }}
         <div class="input-field col s6">
-          <i class="material-icons prefix">account_circle</i>
-          <input id="username"placeholder="`" name="username" type="text" class="{{$errors->has('username')?'invalid':''}}">
+          <input id="username" name="username" type="text" class="{{$errors->has('username')?'invalid':''}}">
           <label for="username" data-error="{{$errors->first('username')}}">Username</label>
         </div>
         <div class="input-field col s6">
-          <i class="material-icons prefix">vpn_key</i>
-          <input id="password" name="password" placeholder="`" type="password" class="{{$errors->has('password')?'invalid':''}}">
+          <input id="password" name="password"  type="password" class="{{$errors->has('password')?'invalid':''}}">
           <label for="password" data-error="{{$errors->first('password')}}">Password</label>
         </div>
         <div class="login-btn-container">

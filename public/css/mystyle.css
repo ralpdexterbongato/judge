@@ -8,6 +8,10 @@ nav
     padding:0px 5px;
   }
 }
+body
+{
+  background: #f4f6f9;
+}
 .flex
 {
   display: flex;
@@ -43,21 +47,18 @@ nav
 .login-form
 {
   margin:auto;
-  padding:30px 20px 5px 20px;
+  padding:10px 40px;
   width: 400px;
   overflow: hidden;
   border-radius: 5px;
 }
+.login-form label
+{
+  width: 100%;
+}
 .login-form .input-field
 {
   margin-top: 30px;
-}
-@media (max-width:560px)
-{
-  .login-form
-  {
-    margin:0px auto;
-  }
 }
 .content-container
 {
@@ -65,6 +66,21 @@ nav
   padding:20px 0px;
 }
 
+@media (max-width:560px)
+{
+  .content-container
+  {
+    padding:0px 10px;
+  }
+  .login-form
+  {
+    margin:0px auto;
+  }
+  .login-form i
+  {
+    display: none;
+  }
+}
 
 /*register*/
 .Create-Acc-container
