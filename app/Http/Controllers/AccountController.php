@@ -22,10 +22,14 @@ class AccountController extends Controller
     }
     public function delete($id)
     {
-      $countadmin=User::where('role','0')->count();
-      if ($countadmin==1)
+      $usertodelete=User::find($id);
+      if($usertodelete->role==0)
       {
-        return ['error'=>'This app requires 1 administrator'];
+        $countadmin=User::where('role','0')->count();
+        if ($countadmin==1)
+        {
+          return ['error'=>'This app requires 1 administrator'];
+        }
       }
       $setups=JudgesSetup::where('user_id',$id)->get(['setup_id']);
       foreach ($setups as $setup)
