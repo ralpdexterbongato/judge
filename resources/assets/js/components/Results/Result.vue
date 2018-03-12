@@ -18,7 +18,7 @@
               <span v-if="Reveal[key]==true">{{displayrank.contestant[0].name}}</span>
               <span v-else><i class="material-icons">lock</i></span>
             </td>
-            <td><span class="bold">{{formatPercent(displayrank.totalRate)}}%</span></td>
+            <td><span class="bold">{{displayrank.totalRate.toFixed(2)}}%</span></td>
             <td>
               <form action="#">
                  <p>
@@ -47,8 +47,8 @@
         <tbody>
           <tr v-for="(contestant,i) in allcontestant">
             <td>{{contestant.name}}</td>
-            <td v-for="(judge,jkey) in judges">{{formatPercent(preavg[jkey][i].total)}} %</td>
-              <td class="bold">{{formatPercent(totalavg[i].total/numberofjudges)}} %</td>
+            <td v-for="(judge,jkey) in judges">{{preavg[jkey][i].total.toFixed(2)}} %</td>
+              <td class="bold">{{totalavg[i].total/numberofjudges.toFixed(2)}} %</td>
             <td><span class="bold"></span></td>
           </tr>
         </tbody>
@@ -78,10 +78,7 @@ Vue.use(VueConfetti)
       stop () {
         this.$confetti.stop()
       },
-      formatPercent(value) {
-        let val = (value/1).toFixed(2).replace(',', '.')
-        return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
-    }
+      
 
     },
   }

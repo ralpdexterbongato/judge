@@ -51202,10 +51202,6 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_0_vue_confetti___default.a);
     },
     stop: function stop() {
       this.$confetti.stop();
-    },
-    formatPercent: function formatPercent(value) {
-      var val = (value / 1).toFixed(2).replace(',', '.');
-      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     }
   }
 });
@@ -51256,7 +51252,7 @@ var render = function() {
               _vm._v(" "),
               _c("td", [
                 _c("span", { staticClass: "bold" }, [
-                  _vm._v(_vm._s(_vm.formatPercent(displayrank.totalRate)) + "%")
+                  _vm._v(_vm._s(displayrank.totalRate.toFixed(2)) + "%")
                 ])
               ]),
               _vm._v(" "),
@@ -51389,8 +51385,7 @@ var render = function() {
                   _vm._l(_vm.judges, function(judge, jkey) {
                     return _c("td", [
                       _vm._v(
-                        _vm._s(_vm.formatPercent(_vm.preavg[jkey][i].total)) +
-                          " %"
+                        _vm._s(_vm.preavg[jkey][i].total.toFixed(2)) + " %"
                       )
                     ])
                   }),
@@ -51398,9 +51393,7 @@ var render = function() {
                   _c("td", { staticClass: "bold" }, [
                     _vm._v(
                       _vm._s(
-                        _vm.formatPercent(
-                          _vm.totalavg[i].total / _vm.numberofjudges
-                        )
+                        _vm.totalavg[i].total / _vm.numberofjudges.toFixed(2)
                       ) + " %"
                     )
                   ]),
