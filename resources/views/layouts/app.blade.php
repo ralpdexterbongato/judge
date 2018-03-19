@@ -9,10 +9,8 @@
     <link rel="stylesheet" href="/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Pacifico" rel="stylesheet">
     <link rel="stylesheet" href="/css/mystyle.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.1.0/sweetalert2.css">
     <script type="text/javascript" src="/js/jquery.js">
     </script>
-    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/limonte-sweetalert2/7.1.0/sweetalert2.min.js">
     </script>
     <title>@yield('title')</title>
   </head>
