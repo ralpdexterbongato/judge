@@ -40,8 +40,8 @@ Route::put('/setup-enable/{id}','SetupController@enable');
 Route::put('/setup-disable/{id}','SetupController@disable');
 
 Route::get('/rating-create','RatingController@create');
-Route::post('/rating-store','RatingController@store');
-Route::put('/rating-update/{setupId}','RatingController@update');
+Route::post('/rating-store','RatingController@storeRate');
+Route::put('/rating-update/{setupId}','RatingController@updateRate');
 Route::get('/rating-create-data','RatingController@createData');
 Route::get('/rating-get-data/{setupId}','RatingController@Contestant');
 

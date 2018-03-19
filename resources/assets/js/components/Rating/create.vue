@@ -21,7 +21,7 @@
       <div class="rating-table-padding">
         <div class="rating-card-title">
           <p>{{contestantData.name}}</p>
-          <h6 onclick="$('#picture-prev-modal').modal('open')"><img v-if="contestantData.picture!=null" :src="'/storage/images/'+contestantData.picture" alt=""></h6>
+          <h6 v-if="contestantData.picture!=null" onclick="$('#picture-prev-modal').modal('open')"><img :src="'/storage/images/'+contestantData.picture" alt=""></h6>
         </div>
         <div class="divider">
         </div>
@@ -63,7 +63,7 @@
   <div v-else class="not-found">
     <h6 class="grey-text"><i class="material-icons">close</i> No event to judge found</h6>
   </div>
-  <div id="picture-prev-modal" class="modal">
+  <div id="picture-prev-modal" class="modal" v-if="contestantData.picture!=null">
     <div class="modal-content">
       <h5>{{contestantData.name}}</h5>
       <div class="image-wrapper">

@@ -41,7 +41,7 @@ class RatingController extends Controller
      }
      return response()->json($response);
     }
-    public function store(Request $request)
+    public function storeRate(Request $request)
     {
       if ($request->Absent=='')
       {
@@ -81,6 +81,7 @@ class RatingController extends Controller
           $RatingTbl->save();
         }
       }
+      return['success'=>'success'];
     }
     public function Contestant($setupId)
     {
@@ -89,7 +90,7 @@ class RatingController extends Controller
            $query->select()->where('setup_id',$setupId);
           }))->paginate(1);
     }
-    public function update(Request $request,$setupId)
+    public function updateRate(Request $request,$setupId)
     {
       if ($request->UpdateRates==[])
       {
@@ -107,6 +108,7 @@ class RatingController extends Controller
         $criteria = (object)$criteria;
         Rating::where('setup_id',$setupId)->where('contestant_id', $request->Contestant)->where('user_id',Auth::user()->id)->where('criteria_id', $criteria->id)->update(['rate'=>$request->UpdateRates[$key]]);
       }
+      return['success'=>'success'];
     }
     public function getOwnScoreRanking($setupid)
     {

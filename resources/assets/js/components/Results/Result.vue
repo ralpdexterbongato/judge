@@ -47,8 +47,8 @@
         <tbody>
           <tr v-for="(contestant,i) in allcontestant">
             <td>{{contestant.name}}</td>
-            <td v-for="(judge,jkey) in judges">{{preavg[jkey][i].total.toFixed(2)}} %</td>
-              <td class="bold">{{totalavg[i].total/numberofjudges.toFixed(2)}} %</td>
+            <td v-for="(judge,jkey) in judges">{{preavg[jkey][i].total}} %</td>
+              <td class="bold">{{totalavg[i].total/numberofjudges}} %</td>
             <td><span class="bold"></span></td>
           </tr>
         </tbody>
@@ -78,7 +78,7 @@ Vue.use(VueConfetti)
       stop () {
         this.$confetti.stop()
       },
-      
+
 
     },
   }

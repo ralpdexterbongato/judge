@@ -49373,23 +49373,25 @@ var render = function() {
               _c("div", { staticClass: "rating-card-title" }, [
                 _c("p", [_vm._v(_vm._s(_vm.contestantData.name))]),
                 _vm._v(" "),
-                _c(
-                  "h6",
-                  {
-                    attrs: { onclick: "$('#picture-prev-modal').modal('open')" }
-                  },
-                  [
-                    _vm.contestantData.picture != null
-                      ? _c("img", {
+                _vm.contestantData.picture != null
+                  ? _c(
+                      "h6",
+                      {
+                        attrs: {
+                          onclick: "$('#picture-prev-modal').modal('open')"
+                        }
+                      },
+                      [
+                        _c("img", {
                           attrs: {
                             src:
                               "/storage/images/" + _vm.contestantData.picture,
                             alt: ""
                           }
                         })
-                      : _vm._e()
-                  ]
-                )
+                      ]
+                    )
+                  : _vm._e()
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "divider" }),
@@ -49584,22 +49586,28 @@ var render = function() {
         ])
       : _c("div", { staticClass: "not-found" }, [_vm._m(0)]),
     _vm._v(" "),
-    _c("div", { staticClass: "modal", attrs: { id: "picture-prev-modal" } }, [
-      _c("div", { staticClass: "modal-content" }, [
-        _c("h5", [_vm._v(_vm._s(_vm.contestantData.name))]),
-        _vm._v(" "),
-        _c("div", { staticClass: "image-wrapper" }, [
-          _vm.contestantData.picture != null
-            ? _c("img", {
-                attrs: {
-                  src: "/storage/images/" + _vm.contestantData.picture,
-                  alt: ""
-                }
-              })
-            : _vm._e()
-        ])
-      ])
-    ]),
+    _vm.contestantData.picture != null
+      ? _c(
+          "div",
+          { staticClass: "modal", attrs: { id: "picture-prev-modal" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _c("h5", [_vm._v(_vm._s(_vm.contestantData.name))]),
+              _vm._v(" "),
+              _c("div", { staticClass: "image-wrapper" }, [
+                _vm.contestantData.picture != null
+                  ? _c("img", {
+                      attrs: {
+                        src: "/storage/images/" + _vm.contestantData.picture,
+                        alt: ""
+                      }
+                    })
+                  : _vm._e()
+              ])
+            ])
+          ]
+        )
+      : _vm._e(),
     _vm._v(" "),
     _c("div", { staticClass: "modal", attrs: { id: "rank-modal" } }, [
       _c("div", { staticClass: "modal-content" }, [
@@ -51384,17 +51392,13 @@ var render = function() {
                   _vm._v(" "),
                   _vm._l(_vm.judges, function(judge, jkey) {
                     return _c("td", [
-                      _vm._v(
-                        _vm._s(_vm.preavg[jkey][i].total.toFixed(2)) + " %"
-                      )
+                      _vm._v(_vm._s(_vm.preavg[jkey][i].total) + " %")
                     ])
                   }),
                   _vm._v(" "),
                   _c("td", { staticClass: "bold" }, [
                     _vm._v(
-                      _vm._s(
-                        _vm.totalavg[i].total / _vm.numberofjudges.toFixed(2)
-                      ) + " %"
+                      _vm._s(_vm.totalavg[i].total / _vm.numberofjudges) + " %"
                     )
                   ]),
                   _vm._v(" "),
