@@ -422,7 +422,36 @@ body
   display: flex;
   justify-content: space-between;
   margin-top: 90px;
-  background-image: url();
+  height: 42px;
+}
+.rating-nav-left.active
+{
+  position:fixed;
+  top: 10px;
+  left:100px;
+  z-index: 17;
+}
+.rating-nav-right.active
+{
+  position:fixed;
+  top: 10px;
+  right:100px;
+  z-index: 17;
+}
+@media (max-width: 640px)
+{
+  .rating-nav-left.active
+  {
+    position:fixed;
+    top: 10px;
+    left:20px;
+  }
+  .rating-nav-right.active
+  {
+    position:fixed;
+    top: 10px;
+    right:20px;
+  }
 }
 .rating-card-title p
 {

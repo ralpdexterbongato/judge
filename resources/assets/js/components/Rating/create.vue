@@ -7,10 +7,10 @@
       <a href="#" v-if="IsDone==0" v-on:click.prevent="getRank()" onclick="$('#rank-modal').modal('open');" class=" predictionOpener">RANKING</a>
     </div>
     <div class="rating-navs">
-      <div class="">
+      <div class="rating-nav-left">
         <a class="btn-floating btn-small waves-effect waves-light blue darken-1" :class="[currentContestantPage!=1?'':'disabled']" v-on:click="backBtn()"><i class="material-icons">arrow_back</i></a>
       </div>
-      <div class="">
+      <div class="rating-nav-right">
         <a class="btn-floating btn-small waves-effect waves-light blue darken-1" :class="[currentContestantPage!= contestantLastPage?'':'disabled']" v-on:click="nextBtn()"><i class="material-icons">arrow_forward</i></a>
       </div>
     </div>
@@ -180,6 +180,7 @@ import axios from 'axios';
         {
           if (((this.Rates[i] > this.EventCrit[i].pivot.percentjudging) || (this.Rates[i] < 1) || (this.Rates[i]==null) || (this.Rates[i]=='') || (isNaN(this.Rates[i])==true))&&(this.Absent!='0'))
           {
+            Materialize.toast('Invalid scores, kindly review',4000);
             return false;
           }
         }
@@ -263,6 +264,7 @@ import axios from 'axios';
         {
           if ((this.updateRates[i] > this.EventCrit[i].pivot.percentjudging) || (this.updateRates[i] < 1) || (this.updateRates[i]==null) || (this.updateRates[i]=='') || (isNaN(this.updateRates[i])==true))
           {
+            Materialize.toast('Invalid scores, kindly review',4000);
             return false;
           }
         }

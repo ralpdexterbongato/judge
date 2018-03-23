@@ -4,13 +4,10 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- CSRF Token -->
-    {{-- <meta name="csrf-token" content="{{ csrf_token() }}"> --}}
     <link rel="shortcut icon" href="icon.png">
     <link rel="stylesheet" href="/css/materialize.min.css">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons|Pacifico" rel="stylesheet">
     <link rel="stylesheet" href="/css/mystyle.css">
-    <script type="text/javascript" src="/js/jquery.js">
-    </script>
     </script>
     <title>@yield('title')</title>
   </head>
@@ -58,7 +55,7 @@
           <a href="#" data-activates="slide-out" class="button-collapse"><i class="material-icons">menu</i></a>
         @endif
         <div class="nav-wrapper">
-          <a href="/" class="brand-logo">Judging App</a>
+          <a href="/" class="brand-logo">Judging System</a>
           <ul class="right hide-on-med-and-down">
             @if (Auth::check() && Auth::user()->role==0)
               <li><a href="/events-panel">Events</a></li>
@@ -88,7 +85,7 @@
          <div class="container">
            <div class="row">
              <div class="col l6 s12">
-               <h5 class="white-text">Capstone project</h5>
+
                <p class="grey-text text-lighten-4"></p>
              </div>
              <div class="col l4 offset-l2 s12">
@@ -105,21 +102,22 @@
            </div>
          </div>
        </footer>
+       <script type="text/javascript" src="/js/jquery.js">
+       </script>
        @if (Session::get('success')!=null)
          <script type="text/javascript">
          Materialize.toast('Success',4000);
          </script>
        @endif
+      <script type="text/javascript">
+        $(document).ready(function() {
+          $(".button-collapse").sideNav();
+          $('select').material_select();
+           $(".button-collapse").sideNav();
+           $('.modal').modal();
 
-    <script type="text/javascript">
-      $(document).ready(function() {
-        $(".button-collapse").sideNav();
-        $('select').material_select();
-         $(".button-collapse").sideNav();
-         $('.modal').modal();
-
-      });
-    </script>
+        });
+      </script>
     <script type="text/javascript" src="/js/app.js">
     </script>
     <script type="text/javascript" src="/js/materialize.min.js">
@@ -139,6 +137,24 @@
         Materialize.toast('Scores are not yet complete',4000);
       </script>
     @endif
+    <script type="text/javascript">
+      $(document).ready(function() {
+        $(window).scroll(function() {
+          var spacetop =$(window).scrollTop();
+          if (spacetop >= 270)
+          {
+            console.log('active');
+            $('.rating-nav-left').addClass('active');
+            $('.rating-nav-right').addClass('active');
+          }else
+          {
+            console.log('inactive');
+            $('.rating-nav-left').removeClass('active');
+            $('.rating-nav-right').removeClass('active');
+          }
+        });
+      });
+    </script>
     @yield('scripts')
 
   </body>

@@ -49156,6 +49156,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     save: function save() {
       for (var i = 0; i < this.EventCrit.length; i++) {
         if ((this.Rates[i] > this.EventCrit[i].pivot.percentjudging || this.Rates[i] < 1 || this.Rates[i] == null || this.Rates[i] == '' || isNaN(this.Rates[i]) == true) && this.Absent != '0') {
+          Materialize.toast('Invalid scores, kindly review', 4000);
           return false;
         }
       }
@@ -49221,6 +49222,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     update: function update() {
       for (var i = 0; i < this.EventCrit.length; i++) {
         if (this.updateRates[i] > this.EventCrit[i].pivot.percentjudging || this.updateRates[i] < 1 || this.updateRates[i] == null || this.updateRates[i] == '' || isNaN(this.updateRates[i]) == true) {
+          Materialize.toast('Invalid scores, kindly review', 4000);
           return false;
         }
       }
@@ -49315,7 +49317,7 @@ var render = function() {
           ]),
           _vm._v(" "),
           _c("div", { staticClass: "rating-navs" }, [
-            _c("div", {}, [
+            _c("div", { staticClass: "rating-nav-left" }, [
               _c(
                 "a",
                 {
@@ -49336,7 +49338,7 @@ var render = function() {
               )
             ]),
             _vm._v(" "),
-            _c("div", {}, [
+            _c("div", { staticClass: "rating-nav-right" }, [
               _c(
                 "a",
                 {
